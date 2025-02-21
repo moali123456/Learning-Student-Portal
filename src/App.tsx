@@ -24,6 +24,7 @@ import SchoolAdminStudents from "./component/school-admin/students/students";
 //toastify
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Reports from "./pages/Reports/Reports";
 
 const App = () => {
   const routes = createBrowserRouter([
@@ -61,6 +62,7 @@ const App = () => {
         { index: true, element: <SchoolAdminStudents /> },
         { path: "students", element: <SchoolAdminStudents /> },
         { path: "students-files", element: <StudentFilePage /> },
+        { path: "Reports", element: <Reports /> },
       ],
     },
   ]);

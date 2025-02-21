@@ -15,6 +15,7 @@ const tabRoutes: { [key: string]: string } = {
   "/dashboard/students": "schoolStudents",
   "/school/students-exams": "studentsExams",
   "/dashboard/students-files": "studentsFiles",
+  "/dashboard/Reports": "Reports",
 };
 
 function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
@@ -68,6 +69,16 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
         onClick={() => handleTabClick("/dashboard/students-files")}
       >
         students Files
+      </button>
+      <button
+        className={`text-left p-2 text-white text-[0.95rem] font-medium rounded-lg ${
+          activeTab === "Reports"
+            ? "bg-[#523397] text-white"
+            : "hover:bg-[#e2daf3] text-gray-400"
+        }`}
+        onClick={() => handleTabClick("/dashboard/Reports")}
+      >
+        Reports
       </button>
 
       {/* <button
