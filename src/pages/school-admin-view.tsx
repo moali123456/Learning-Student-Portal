@@ -58,7 +58,7 @@ export function StudentFilePage() {
   return (
     <div className="flex flex-col min-h-screen mt-5">
       {/* Header */}
-      <Header
+      {/* <Header
         leftChildren={
           <ul>
             <li>
@@ -77,7 +77,7 @@ export function StudentFilePage() {
             <div className="header-circle"></div>
           </div>
         }
-      />
+      /> */}
 
       {/* Main Content */}
       <main className="flex-grow">
@@ -158,7 +158,7 @@ export function StudentFilePage() {
       </main>
 
       {/* Footer */}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

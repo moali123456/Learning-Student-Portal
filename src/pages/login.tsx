@@ -40,9 +40,9 @@ const StudentLogin: React.FC = () => {
           : await adminSchoolLogin(data.username, data.password);
       console.log("Login successful:", response);
       if (role === "Student") {
-        navigate("/assessments");
+        navigate("/student/assessments");
       } else {
-        navigate("/students-files");
+        navigate("/dashboard/students-files");
       }
     } catch (error: any) {
       console.error("Login failed:", error);
