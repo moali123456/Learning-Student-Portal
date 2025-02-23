@@ -3,11 +3,14 @@ import {
   downloadExcelFile,
   fetchGradeSelectionOptions,
   fetchLevelSelectionOptions,
+  fetchSubjectSelectionOptions,
 } from "../../api/services/Reports.services";
 import ReportDownload from "./components/ReportDownload";
 import Selector from "./components/Selector";
 import YearSelector from "./components/YearSelector";
 import Input from "./components/Input";
+import AttainmentReport from "./Attainment/AttainmentReport";
+import PreviewBtn from "./components/PreviewBtn";
 
 interface Option {
   value: string;
@@ -25,6 +28,7 @@ export default function SelectionForm() {
 
   const [gradeOptions, setgradeOptions] = useState<Option[] | []>([]);
   const [levelOptions, setlevelOptions] = useState<Option[] | []>([]);
+  const [subjectOptions, setsubjectOptions] = useState<Option[] | []>([]);
 
   const [loading, setLoading] = useState(true); // Loader state
 
@@ -32,8 +36,10 @@ export default function SelectionForm() {
     try {
       const dataGrade = await fetchGradeSelectionOptions({});
       const dataLevel = await fetchLevelSelectionOptions({});
+      const dataSubject = await fetchSubjectSelectionOptions({});
       setgradeOptions(dataGrade || []);
       setlevelOptions(dataLevel || []);
+      setsubjectOptions(dataSubject || []);
       setLoading(false);
     } catch (error) {
       console.error("Failed to fetch selection options:", error);
@@ -54,6 +60,7 @@ export default function SelectionForm() {
   };
 
   return (
+    // <AttainmentReport />
     <div className="ps-10 w-full flex flex-col items-start justify-start gap-8 ">
       <YearSelector
         selectedYear={formData.selectedYear}
@@ -61,11 +68,13 @@ export default function SelectionForm() {
       />
 
       <div className="space-y-4 w-1/2">
-        <Input
+        <Selector
           name="subject"
           value={formData.subject}
-          placeholder="Subject (optional)"
           onChange={(value) => handleChange("subject", value)}
+          options={subjectOptions}
+          placeholder="Subject (required)"
+          loading={loading}
         />
 
         <Selector
@@ -94,10 +103,7 @@ export default function SelectionForm() {
         />
       </div>
       <div className="w-4/6  bg-white p-6 rounded-lg shadow-lg space-y-3">
-        {/* <ReportDownload type="pdf" fileName="report1" />
-        <ReportDownload type="pdf" fileName="report2" />
-        <ReportDownload type="pdf" fileName="report3" />
-        <ReportDownload type="pdf" fileName="report4" /> */}
+        <PreviewBtn apiCall={() => {}} fileName="student marks" />
         <ReportDownload
           type="excel"
           fileName="student marks"

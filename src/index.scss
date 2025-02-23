@@ -7,6 +7,10 @@
   margin: 0;
 }
 
+.clip-triangle {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
 .home-wrapper {
   margin-top: 24px;
 
@@ -1265,6 +1269,6 @@
     }
   }
 }
-.instruction-item.active p{
+.instruction-item.active p {
   color: red !important;
 }

@@ -1,6 +1,26 @@
 import apiInstance from "../axiosInstance";
 
 // Function to fetch grade selection options via POST request
+export const fetchSubjectSelectionOptions = async (payload: object) => {
+  try {
+    const response = await apiInstance.post("/Subject/Search", payload);
+    if (response.data.StatusCode === 200 && response.data.Data?.Data) {
+      return response.data.Data.Data.filter((item) => item.IsActive).map(
+        (item) => ({
+          value: item.Id,
+          label: item.NameEn,
+          labelAr: item.NameAr,
+        })
+      );
+    } else {
+      throw new Error("Invalid response structure");
+    }
+  } catch (error) {
+    console.error("Error fetching selection options:", error);
+    throw error;
+  }
+};
+// Function to fetch grade selection options via POST request
 export const fetchGradeSelectionOptions = async (payload: object) => {
   try {
     const response = await apiInstance.post("/Grade/Search", payload);

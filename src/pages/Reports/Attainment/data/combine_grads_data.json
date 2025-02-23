@@ -1,0 +1,41 @@
+[
+  {
+    "category": "Below",
+    "bgColor": "bg-red-400",
+    "grades": [
+      { "label": "B", "students": 0, "percentage": 0 },
+      { "label": "B+", "students": 0, "percentage": 0 },
+      { "label": "D", "students": 0, "percentage": 0 },
+      { "label": "D+", "students": 0, "percentage": 0 },
+      { "label": "M", "students": 0, "percentage": 0 },
+      { "label": "M+", "students": 0, "percentage": 0 }
+    ],
+    "total": 0
+  },
+  {
+    "category": "Inline",
+    "bgColor": "bg-yellow-400",
+    "grades": [
+      { "label": "B", "students": 0, "percentage": 0 },
+      { "label": "B+", "students": 2, "percentage": 40 },
+      { "label": "D", "students": 0, "percentage": 0 },
+      { "label": "D+", "students": 0, "percentage": 0 },
+      { "label": "M", "students": 0, "percentage": 0 },
+      { "label": "M+", "students": 0, "percentage": 0 }
+    ],
+    "total": 2
+  },
+  {
+    "category": "Above",
+    "bgColor": "bg-green-400",
+    "grades": [
+      { "label": "B", "students": 0, "percentage": 0 },
+      { "label": "B+", "students": 3, "percentage": 60 },
+      { "label": "D", "students": 0, "percentage": 0 },
+      { "label": "D+", "students": 0, "percentage": 0 },
+      { "label": "M", "students": 0, "percentage": 0 },
+      { "label": "M+", "students": 0, "percentage": 0 }
+    ],
+    "total": 3
+  }
+]
