@@ -20,6 +20,7 @@ import { StudentFilePage } from "./pages/school-admin-view";
 import StudentLayout from "./layout/sudent-layout/student-layout";
 import AdminLayout from "./layout/admin-layout/admin-layout";
 import SchoolAdminStudents from "./component/school-admin/students/students";
+import StudentsExams from "./component/school-admin/exams/students-exams";
 
 //toastify
 import { ToastContainer } from "react-toastify";
@@ -61,6 +62,7 @@ const App = () => {
         { index: true, element: <SchoolAdminStudents /> },
         { path: "students", element: <SchoolAdminStudents /> },
         { path: "students-files", element: <StudentFilePage /> },
+        { path: "students-exams", element: <StudentsExams /> },
       ],
     },
   ]);

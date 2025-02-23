@@ -13,7 +13,7 @@ interface SidebarProps {
 
 const tabRoutes: { [key: string]: string } = {
   "/dashboard/students": "schoolStudents",
-  "/school/students-exams": "studentsExams",
+  "/dashboard/students-exams": "studentsExams",
   "/dashboard/students-files": "studentsFiles",
 };
 
@@ -54,7 +54,7 @@ function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             ? "bg-[#523397] text-white"
             : "hover:bg-[#3d217b] text-gray-400"
         }`}
-        onClick={() => handleTabClick("/school/students-exams")}
+        onClick={() => handleTabClick("/dashboard/students-exams")}
       >
         Exams
       </button>
