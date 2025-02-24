@@ -1,15 +1,14 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Header from "../../layout/header";
 import Footer from "../../layout/footer";
+
+import { useParams } from "react-router-dom";
 import {
-  getAllQuestionsReading,
   getAllQuestionsTopicReading,
-  getAllTopicsListining,
   getAllTopicsReading,
 } from "../../api/adminApis";
-import { useParams } from "react-router-dom";
 
-const ReadingQuestions: React.FC = () => {
+const ListingQuestions: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [readingQuestions, setReadingQuestions] = useState<any>(null);
@@ -525,7 +524,7 @@ const ReadingQuestions: React.FC = () => {
           <div className="left-side">
             <img src="/assets/home/highlight.svg" alt="" />
             <div className="main-points">
-              <p className="title">Reading</p>
+              <p className="title">Listining</p>
               <ul className="points">
                 <li>
                   Lorem Ipsum is simply dummy text of the printing and
@@ -633,4 +632,4 @@ const ReadingQuestions: React.FC = () => {
   );
 };
 
-export default ReadingQuestions;
+export default ListingQuestions;
