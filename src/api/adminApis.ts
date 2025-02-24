@@ -247,3 +247,158 @@ export const searchGrades = async (
     throw error.response?.data || new Error("Failed to search for schools");
   }
 };
+
+export const deleteUser = async (userId: string) => {
+  try {
+    const response = await apiInstance.delete(`/Account/Delete`, {
+      params: {
+        UserId: userId,
+      },
+    });
+    return response.data; // Assuming success data is returned here
+  } catch (error: any) {
+    throw error.response?.data || new Error("Failed to delete user");
+  }
+};
+
+export const getAllUsers = async (
+  type: number,
+  page = 1,
+  size = 20,
+  keyword = "",
+  sortField?: string,
+  sortOrder?: number,
+  filters?: Array<{
+    columnName: string;
+    filterValue: string;
+    filterOption: number;
+  }>
+) => {
+  try {
+    const requestBody: any = {
+      Type: type, // User type (e.g., SuperAdmin, Admin)
+      Page: page, // Page number for pagination
+      Size: size, // Number of results per page
+      Keyword: keyword, // Search keyword for filtering (e.g., user email or name)
+    };
+
+    // Add SortObj if sortField and sortOrder are provided
+    if (sortField && sortOrder !== undefined) {
+      requestBody.SortObj = {
+        FieldName: sortField,
+        SortOrder: sortOrder,
+      };
+    }
+
+    // Add FilterParams if filters are provided
+    if (filters && filters.length > 0) {
+      requestBody.FilterParams = filters.map(
+        ({ columnName, filterValue, filterOption }) => ({
+          ColumnName: columnName,
+          FilterValue: filterValue,
+          FilterOption: filterOption,
+        })
+      );
+    }
+
+    const response = await apiInstance.post("/Account/Search", requestBody);
+
+    return response.data; // Return the successful response data containing the list of users
+  } catch (error: any) {
+    throw error.response?.data || new Error("Failed to fetch users");
+  }
+};
+
+export const addFileStudent = async (
+  schoolId: string,
+  studentFile: File,
+  gradeId?: string
+) => {
+  try {
+    // Create a FormData object to hold the file and other parameters
+    const formData = new FormData();
+    formData.append("StudentFile", studentFile); // Add the file to the form data
+
+    // Make the POST request with the form data and query parameters
+    const response = await apiInstance.post(
+      `/Account/AddFileStudent`,
+      formData,
+      {
+        params: {
+          GradeId: gradeId, // Query parameter GradeId
+          SchoolId: schoolId, // Query parameter SchoolId
+        },
+        responseType: "blob", // Important: Set the response type to 'blob' for binary data
+        headers: {
+          "Content-Type": "multipart/form-data", // Ensure the correct content type is set
+        },
+      }
+    );
+
+    // Create a blob from the response data
+    const blob = new Blob([response.data], {
+      type: response.headers["content-type"],
+    });
+
+    // Create a download link for the blob
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+
+    // Get the filename from the response headers if available, or use a default name
+    const filename =
+      response.headers["content-disposition"]
+        ?.split("filename=")[1]
+        ?.replace(/['"]/g, "") || "download.xlsx";
+    link.download = filename;
+
+    // Programmatically click the link to trigger the download
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up and remove the link element
+    link.remove();
+
+    return response.data; // Return the response data (optional)
+  } catch (error: any) {
+    throw error.response?.data || new Error("File upload failed");
+  }
+};
+
+export const downloadTemplate = async () => {
+  try {
+    // Send a GET request to download the template
+    const response = await apiInstance.get(`/Account/DownloadTemplate`, {
+      responseType: "blob", // Set the response type to 'blob' to handle binary data
+    });
+
+    // Create a blob from the response data
+    const blob = new Blob([response.data], {
+      type: response.headers["content-type"],
+    });
+
+    // Create a download link for the blob
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+
+    // Get the filename from the response headers if available, or use a default name
+    const filename =
+      response.headers["content-disposition"]
+        ?.split("filename=")[1]
+        ?.replace(/['"]/g, "") || "template.xlsx";
+    link.download = filename;
+
+    // Programmatically click the link to trigger the download
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up and remove the link element
+    link.remove();
+
+    return response.data; // Return the response data (optional)
+  } catch (error: any) {
+    console.error("Failed to download the template", error);
+    throw error.response?.data || new Error("Template download failed");
+  }
+};
