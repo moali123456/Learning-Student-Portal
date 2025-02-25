@@ -3,7 +3,7 @@ import AttainmentReport from "../Attainment/AttainmentReport";
 
 interface PreviewModalProps {
   isOpen: boolean;
-  content: string | null;
+  content: JSX.Element | string | null;
   onClose: () => void;
 }
 
@@ -22,7 +22,7 @@ export default function PreviewModal({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-4 rounded-lg shadow-lg w-full h-[98%] max-w-6xl flex flex-col justify-between ">
+      <div className="bg-white p-4 rounded-lg shadow-lg w-full h-[90%] max-lg:h-[80%]  max-w-6xl flex flex-col justify-between ">
         <div className="text-lg font-semibold mb-4">Preview Report</div>
 
         {/* Content Preview */}
@@ -30,10 +30,11 @@ export default function PreviewModal({
           className="border p-4 h-[83%] overflow-auto bg-gray-100 text-sm rounded"
           ref={contentRef}
         >
-          <AttainmentReport x={contentRef} />
+          {/* <AttainmentReport x={contentRef} /> */}
+          {content}
         </div>
 
-        <div className="h-[8%] flex justify-end space-x-3">
+        <div className="h-[8%] mt-8 flex justify-end space-x-3">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"

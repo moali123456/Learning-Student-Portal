@@ -11,6 +11,7 @@ import YearSelector from "./components/YearSelector";
 import Input from "./components/Input";
 import AttainmentReport from "./Attainment/AttainmentReport";
 import PreviewBtn from "./components/PreviewBtn";
+import StudentMarks from "./StudentMarks/StudentMarks";
 
 interface Option {
   value: string;
@@ -103,12 +104,13 @@ export default function SelectionForm() {
         />
       </div>
       <div className="w-4/6  bg-white p-6 rounded-lg shadow-lg space-y-3">
-        <PreviewBtn apiCall={() => {}} fileName="student marks" />
-        <ReportDownload
+        <PreviewBtn fileName="student marks Report" content={<AttainmentReport />} />
+        <PreviewBtn fileName="student marks excel" content={<StudentMarks/>} />
+        {/* <ReportDownload
           type="excel"
           fileName="student marks"
           apiCall={() => downloadExcelFile(formData)}
-        />
+        /> */}
       </div>
     </div>
   );

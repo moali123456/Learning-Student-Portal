@@ -3,19 +3,22 @@ import PreviewModal from "./PreviewModal";
 
 interface PreviewBtnProps {
   fileName: string;
-  apiCall: (fileName: string) => Promise<string>; // Fetch preview content
+  content: JSX.Element;
+  // apiCall: (fileName: string) => Promise<string>; // Fetch preview content
 }
 
-export default function PreviewBtn({ fileName, apiCall }: PreviewBtnProps) {
+export default function PreviewBtn({ fileName, content }: PreviewBtnProps) {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [previewContent, setPreviewContent] = useState<string | null>(null);
+  const [previewContent, setPreviewContent] = useState<JSX.Element | null>(
+    null
+  );
 
   const openModal = async () => {
     setLoading(true);
     try {
       //   const content = await apiCall(fileName); // Fetch preview content
-      setPreviewContent("content");
+      setPreviewContent(content);
       setIsModalOpen(true);
     } catch (error) {
       console.error("Error fetching file preview:", error);

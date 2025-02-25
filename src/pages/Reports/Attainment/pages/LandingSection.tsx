@@ -10,7 +10,7 @@ export default function LandingSection({ schoolName }: AttainmentSectionProps) {
     <div className="text-center p-6 bg-white rounded shadow-md w-full max-w-4xl mb-6">
       <div className="w-full flex justify-center ">
         <img
-          src={header}
+          src={"#"}
           alt="Benchmark Logo"
           className="w-full object-cover"
         />
@@ -39,9 +39,9 @@ export default function LandingSection({ schoolName }: AttainmentSectionProps) {
         </a>
         <p className="font-bold">support@abt-assessments.com</p>
       </div>
-      <div className="w-full flex justify-center mt-4">
+      {/* <div className="w-full flex justify-center mt-4">
         <img src={footer} alt="Footer Logos" className="w-full object-cover" />
-      </div>
+      </div> */}
     </div>
   );
 }
