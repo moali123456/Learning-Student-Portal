@@ -61,7 +61,6 @@ const AdminLayout = () => {
 
   return (
     <>
-      <p>admiiiiiiiiiiiiiiiiiin</p>
       <header
         className={`flex h-16 shrink-0 items-center gap-2 border-b px-4 justify-between transition-all duration-300 ${
           isSidebarOpen ? "ml-64" : "ml-0"

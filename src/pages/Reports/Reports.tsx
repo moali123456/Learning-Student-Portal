@@ -103,7 +103,7 @@ export default function SelectionForm() {
       </div>
       <div className="w-4/6  bg-white p-6 rounded-lg shadow-lg space-y-3">
         <PreviewBtn
-          fileName="student marks Report"
+          fileName="Attainment Report"
           content={<AttainmentReport formData={formData} />}
         />
         <PreviewBtn fileName="student marks excel" content={<StudentMarks />} />

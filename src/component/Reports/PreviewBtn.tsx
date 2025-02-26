@@ -35,7 +35,7 @@ export default function PreviewBtn({ fileName, content }: PreviewBtnProps) {
 
   return (
     <div className="flex justify-between items-center w-full rounded overflow-hidden">
-      <div className="w-[60%] px-4 py-3 bg-purple-500 text-white rounded font-semibold">
+      <div className="w-[60%] px-4 py-3 bg-[#7a55cd] text-white rounded font-semibold">
         {fileName}
       </div>
 

@@ -31,7 +31,7 @@ export default function Input({
       value={inputValue}
       placeholder={placeholder}
       onChange={(e) => setInputValue(e.target.value)}
-      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none transition"
+      className="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-purple-400 focus:outline-none transition"
     />
   );
 }
