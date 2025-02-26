@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import AttainmentReport from "../Attainment/AttainmentReport";
+import AttainmentReport from "../../../pages/Reports/Attainment/AttainmentReport";
 
 interface PreviewModalProps {
   isOpen: boolean;

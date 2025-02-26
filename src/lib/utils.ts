@@ -5,7 +5,7 @@ import {
   ChartDataParams,
   DoughnutData,
   DoughnutDataParams,
-} from "../pages/Reports/models/types";
+} from "../models/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

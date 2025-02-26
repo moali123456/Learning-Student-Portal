@@ -5,12 +5,12 @@ import {
   fetchSubjectSelectionOptions,
 } from "../../api/services/Reports.services";
 import AttainmentReport from "./Attainment/AttainmentReport";
-import Input from "./components/Input";
-import PreviewBtn from "./components/PreviewBtn";
-import Selector from "./components/Selector";
-import YearSelector from "./components/YearSelector";
 import StudentMarks from "./StudentMarks/StudentMarks";
-import { FormData } from "./models/types";
+import { FormData } from "../../models/types";
+import YearSelector from "../../component/Reports/YearSelector";
+import Selector from "../../component/Reports/Selector";
+import Input from "../../component/Reports/Input";
+import PreviewBtn from "../../component/Reports/PreviewBtn";
 
 interface Option {
   value: string;

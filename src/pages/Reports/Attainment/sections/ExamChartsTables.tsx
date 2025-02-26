@@ -10,7 +10,7 @@ import {
 } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { generateChartData, generateDoughnutData } from "../../../../lib/utils";
-import { ExamResultType } from "../../models/types";
+import { ExamResultType } from "../../../../models/types";
 import AssessmentTable from "./AssessmentTable";
 
 ChartJS.register(

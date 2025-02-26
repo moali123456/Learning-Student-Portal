@@ -1,4 +1,4 @@
-import SchoolLogo from "../images/schoolLogo.png";
+import Images from "../../../../assets/images/Images";
 import reportData from "../data/report_points.json";
 // interface ReportItem {
 //   title: string;
@@ -10,7 +10,11 @@ export default function ReportTable() {
   return (
     <div className="p-6 bg-white rounded shadow-md max-w-4xl mx-auto mb-6">
       <div className="w-full flex justify-center ">
-        <img src={SchoolLogo} alt="Benchmark Logo" className="object-cover" />
+        <img
+          src={Images.schoolLog}
+          alt="Benchmark Logo"
+          className="object-cover"
+        />
       </div>
       <h2 className="text-xl font-bold text-teal-600 text-center mb-4">
         In this report, we analyse the below points

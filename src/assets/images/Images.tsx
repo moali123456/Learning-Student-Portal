@@ -13,6 +13,7 @@ const Images = {
     edit_icon: new URL("./edit-icon.svg", import.meta.url).href,
     show_password_icon: new URL("./eye_open_icon.svg", import.meta.url).href,
     hide_password_icon: new URL("./eye_closed_icon.svg", import.meta.url).href,
+    schoolLog: new URL("./schoolLogo.png", import.meta.url).href,
   };
   
   export default Images;
