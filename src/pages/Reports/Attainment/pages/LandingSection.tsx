@@ -26,7 +26,7 @@ export default function LandingSection({ schoolName }: AttainmentSectionProps) {
         التقرير المجمع بناء على نطاقات قياس الأداء المتوقع
       </h3>
       <div className="flex justify-center mt-4">
-        <img src={landing} />
+        <img src="/assets/login/login-ill.svg" />
       </div>
       <div className="mt-4">
         <p className=" text-green-800 font-bold ">{schoolName}</p>

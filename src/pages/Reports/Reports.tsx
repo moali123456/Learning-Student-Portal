@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import {
-  downloadExcelFile,
   fetchGradeSelectionOptions,
   fetchLevelSelectionOptions,
   fetchSubjectSelectionOptions,
 } from "../../api/services/Reports.services";
-import ReportDownload from "./components/ReportDownload";
+import AttainmentReport from "./Attainment/AttainmentReport";
+import Input from "./components/Input";
+import PreviewBtn from "./components/PreviewBtn";
 import Selector from "./components/Selector";
 import YearSelector from "./components/YearSelector";
-import Input from "./components/Input";
-import AttainmentReport from "./Attainment/AttainmentReport";
-import PreviewBtn from "./components/PreviewBtn";
 import StudentMarks from "./StudentMarks/StudentMarks";
+import { FormData } from "./models/types";
 
 interface Option {
   value: string;
@@ -19,8 +18,8 @@ interface Option {
 }
 
 export default function SelectionForm() {
-  const [formData, setFormData] = useState({
-    selectedYear: "", // Now tracking the selected year
+  const [formData, setFormData] = useState<FormData>({
+    selectedYear: "",
     subject: "",
     grade: "",
     level: "",
@@ -61,7 +60,6 @@ export default function SelectionForm() {
   };
 
   return (
-    // <AttainmentReport />
     <div className="ps-10 w-full flex flex-col items-start justify-start gap-8 ">
       <YearSelector
         selectedYear={formData.selectedYear}
@@ -104,13 +102,11 @@ export default function SelectionForm() {
         />
       </div>
       <div className="w-4/6  bg-white p-6 rounded-lg shadow-lg space-y-3">
-        <PreviewBtn fileName="student marks Report" content={<AttainmentReport />} />
-        <PreviewBtn fileName="student marks excel" content={<StudentMarks/>} />
-        {/* <ReportDownload
-          type="excel"
-          fileName="student marks"
-          apiCall={() => downloadExcelFile(formData)}
-        /> */}
+        <PreviewBtn
+          fileName="student marks Report"
+          content={<AttainmentReport formData={formData} />}
+        />
+        <PreviewBtn fileName="student marks excel" content={<StudentMarks />} />
       </div>
     </div>
   );
