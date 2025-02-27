@@ -6,7 +6,6 @@ import { Outlet } from "react-router-dom";
 const StudentLayout = () => {
   return (
     <>
-      <p>studeeeeeeeeeeeent</p>
       <Outlet />
     </>
   );
