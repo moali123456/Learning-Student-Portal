@@ -32,7 +32,7 @@ const Assessments: React.FC = () => {
   }, []);
 
   const handleCardClick = (examId: string, title: string) => {
-    navigate(`/details/${examId}`, {
+    navigate(`/student/details/${examId}`, {
       state: { title }, // Pass the title to the next page
     });
   };
@@ -51,7 +51,10 @@ const Assessments: React.FC = () => {
             !error &&
             exams.length > 0 &&
             exams.map((exam, index) => (
-              <div key={index} className="assessment-item col-span-12 md:col-span-3">
+              <div
+                key={index}
+                className="assessment-item col-span-12 md:col-span-3"
+              >
                 <div className="img-wrapper">
                   <img
                     src={
@@ -66,8 +69,8 @@ const Assessments: React.FC = () => {
                 <button
                   onClick={() =>
                     handleCardClick(
-                      exam.ExamId,
-                      exam.TitleEn || "Assessment Title"
+                      exam?.ExamId,
+                      exam?.TitleEn || "Assessment Title"
                     )
                   }
                 >
