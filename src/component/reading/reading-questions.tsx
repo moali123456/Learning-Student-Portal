@@ -255,39 +255,38 @@ const ReadingQuestions: React.FC = () => {
             <div key={match.Id} className="choose-the-correct-answer">
               <p className="section-title">
                 <span className="question-num">{matchIndex + 1}</span>
-                choose the correct answer
+                Choose the correct answer
               </p>
               <div className="choose-questions">
-                <div className="question-item">
-                  <p className="question">
-                    {match?.MatchingQuestion?.map(
-                      (question: any, questionIndex: number) => (
-                        <label key={question?.Id}>
-                          {question?.ContentQuestion}
-                        </label>
-                      )
-                    )}
-                  </p>
-                  <div className="answers">
-                    {match?.Answers?.map((answer: any, answerIndex: number) => (
-                      <label key={answer.Id}>
-                        <input
-                          type="radio"
-                          name={`question-${match.Id}`}
-                          value={answer.Answer}
-                          onChange={() =>
-                            handleAnswerSelectionMatching(
-                              match.Id,
-                              answer.Answer
-                            )
-                          }
-                          checked={selectedAnswers[match.Id] === answer.Answer}
-                        />
-                        {answer.Answer}
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                {match?.MatchingQuestion?.map(
+                  (question: any, questionIndex: number) => (
+                    <div key={question?.Id} className="question-row">
+                      <p className="question">{question?.ContentQuestion}</p>
+                      <div className="answers">
+                        {match?.Answers?.[questionIndex] && (
+                          <label key={match.Answers[questionIndex].Id}>
+                            <input
+                              type="radio"
+                              name={`question-${match.Id}-${questionIndex}`}
+                              value={match.Answers[questionIndex].Answer}
+                              onChange={() =>
+                                handleAnswerSelectionMatching(
+                                  match.Id,
+                                  match.Answers[questionIndex].Answer
+                                )
+                              }
+                              checked={
+                                selectedAnswers[match.Id] ===
+                                match.Answers[questionIndex].Answer
+                              }
+                            />
+                            {match.Answers[questionIndex].Answer}
+                          </label>
+                        )}
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           ))}

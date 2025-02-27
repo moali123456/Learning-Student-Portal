@@ -1265,6 +1265,27 @@
     }
   }
 }
-.instruction-item.active p{
+.instruction-item.active p {
   color: red !important;
+}
+.choose-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.question-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.question {
+  flex: 1;
+  font-weight: bold;
+}
+
+.answers {
+  flex: 1;
+  text-align: left;
 }

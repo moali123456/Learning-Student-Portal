@@ -35,7 +35,7 @@ const AssessmentsDetails: React.FC = () => {
 
   const handleAssessmentClick = (skillName: string, skillId: string) => {
     console.log(skillName, skillId);
-    navigate(`/questions/${skillId}`, { state: { skillName } });
+    navigate(`/student/questions/${skillId}`, { state: { skillName } });
   };
 
   const renderSkillIcon = (
