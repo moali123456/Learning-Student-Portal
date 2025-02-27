@@ -8,15 +8,12 @@ import { previewStudentAttaimentReport } from "../../../api/services/Reports.ser
 import { ExamResultType, FormData } from "../../../models/types";
 import ExamChartsTables from "./sections/ExamChartsTables";
 import Images from "../../../assets/images/Images";
-type AttainmentReportProps = {
-  formData: FormData;
-};
-function AttainmentReport({ formData }: AttainmentReportProps) {
+
+function AttainmentReport({ formData }: { formData: FormData }) {
   const [loading, setLoading] = useState(false);
   const [examChartsData, setexamChartsData] = useState<ExamResultType[] | []>(
     []
   );
-
   const getAttainmentReportData = async () => {
     setLoading(true);
     try {
@@ -32,22 +29,28 @@ function AttainmentReport({ formData }: AttainmentReportProps) {
 
   useEffect(() => {
     getAttainmentReportData();
-  }, []);
+  }, [formData]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-gray-100 min-h-full">
+    <div className="flex flex-col items-center justify-center p-4 min-h-full">
       {loading ? (
-        <div className="text-2xl font-bold text-gray-500">
+        <div className="w-[56rem] flex justify-center items-center">
           <img src={Images.loader_1} />
         </div>
       ) : (
         <>
-          <LandingSection schoolName={"Liwa International School"} />
-          <ABTAssessments />
-          <AttainmentSkillsRanges />
-          <ReportTable />
-          <CombinedGrades />
-          <ExamChartsTables Data={examChartsData} />
+          {examChartsData.length ? (
+            <>
+              <LandingSection schoolName={"Liwa International School"} />
+              <ABTAssessments />
+              <AttainmentSkillsRanges />
+              <ReportTable />
+              <CombinedGrades />
+              <ExamChartsTables Data={examChartsData} />
+            </>
+          ) : (
+            "no such data"
+          )}
         </>
       )}
     </div>

@@ -24,16 +24,17 @@ export default function ReportDownload({
     }
   };
   return (
-    <div className="flex justify-between items-center w-full rounded overflow-hidden">
+    <div>
+      {/* <div className="flex justify-between items-center w-full rounded overflow-hidden"> */}
       {/* Report File Label */}
-      <div className="w-[60%] px-4 py-3 bg-purple-500 text-white rounded font-semibold">
+      {/* <div className="w-[60%] px-4 py-3 bg-purple-500 text-white rounded font-semibold">
         {fileName}
-      </div>
+      </div> */}
 
       {/* Download Button */}
       <div
         onClick={!loading ? handleDownload : undefined}
-        className={`w-[35%] py-3 flex justify-center font-semibold text-white rounded transition cursor-pointer ${
+        className={`p-3 flex justify-center font-semibold text-white rounded transition cursor-pointer ${
           loading
             ? "bg-gray-400 cursor-wait"
             : type === "pdf"
@@ -41,7 +42,6 @@ export default function ReportDownload({
             : "bg-green-600 hover:bg-green-700"
         }`}
       >
-        {/* {type === "pdf" ? "Download as PDF" : "Download as Excel"} */}
         {loading ? (
           <>
             <svg
@@ -66,10 +66,8 @@ export default function ReportDownload({
             </svg>
             Downloading...
           </>
-        ) : type === "pdf" ? (
-          "Download as PDF"
         ) : (
-          "Download as Excel"
+          "Download"
         )}
       </div>
     </div>

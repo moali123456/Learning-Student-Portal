@@ -1,5 +1,6 @@
 import axios from "axios";
 import apiInstance from "../axiosInstance";
+import { FormData } from "../../models/types";
 
 // Function to fetch grade selection options via POST request
 export const fetchSubjectSelectionOptions = async (payload: object) => {
@@ -62,12 +63,10 @@ export const fetchLevelSelectionOptions = async (payload: object) => {
   }
 };
 // Function to download student marks excel report via POST request
-export const downloadExcelFile = async (formData: {
-  subject: string;
-  grade: string;
-  level: string;
-  studentCode: string;
-}) => {
+export const downloadExcelFile = async (
+  formData: FormData,
+  Ispreview: boolean
+) => {
   try {
     // Prepare API request payload
     const payload = {
@@ -75,6 +74,8 @@ export const downloadExcelFile = async (formData: {
       GradeId: formData.grade || null,
       LevelId: formData.level || null,
       StudentCode: formData.studentCode || null,
+      AcademicYearId: formData.selectedYear || false,
+      Ispreview: Ispreview || true,
     };
 
     console.log("Sending payload:", payload);
@@ -102,12 +103,7 @@ export const downloadExcelFile = async (formData: {
   }
 };
 // Function to preview student attainment report via POST request
-export const previewStudentAttaimentReport = async (formData: {
-  subject: string;
-  grade: string;
-  level: string;
-  studentCode: string;
-}) => {
+export const previewStudentAttaimentReport = async (formData: FormData) => {
   try {
     // Prepare API request payload
     const payload = {
@@ -115,12 +111,14 @@ export const previewStudentAttaimentReport = async (formData: {
       GradeId: formData.grade || null,
       LevelId: formData.level || null,
       StudentCode: formData.studentCode || null,
+      AcademicYearId: formData.selectedYear || false,
+      Ispreview: true,
     };
 
     console.log("Sending payload:", payload);
 
-    const response = await axios.post(
-      "http://localhost:4111/StudentAttaimentReport",
+    const response = await apiInstance.post(
+      "/Reports/StudentAttaimentReport",
       payload
     );
     // const response = await apiInstance.post(

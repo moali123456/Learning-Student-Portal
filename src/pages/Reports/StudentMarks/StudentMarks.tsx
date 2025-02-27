@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { downloadExcelFile } from "../../../api/services/Reports.services";
 import { Button } from "../../../component/school-admin/ui/button";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "../../../component/school-admin/ui/table";
-import da from "./SelectionReport.json";
-
+import { FormData } from "../../../models/types";
+import da from "./SelectionReport.json"
 interface Student {
   StudentID: string;
   StudentName: string;
@@ -36,8 +36,10 @@ interface Student {
   AttainmentAndExpectationsR2?: string;
   AttainmentAndExpectationsR3?: string;
 }
-const StudentTable: React.FC = () => {
-  const [students, setStudents] = useState<Student[]>(da);
+function StudentTable({ formData }: { formData: FormData }) {
+  const [loading, setLoading] = useState(false);
+
+  const [students, setStudents] = useState<Student[] | []>(da);
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 5;
 
@@ -47,7 +49,6 @@ const StudentTable: React.FC = () => {
     indexOfFirstStudent,
     indexOfLastStudent
   );
-
   const totalPages = Math.ceil(students.length / studentsPerPage);
 
   const handleNextPage = () => {
@@ -61,9 +62,24 @@ const StudentTable: React.FC = () => {
       setCurrentPage(currentPage - 1);
     }
   };
+  // const getStudentMarksData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const data = await downloadExcelFile(formData, false);
+  //     console.log("first studrnt marks", data);
+  //     setStudents(data);
+  //   } catch (error) {
+  //     console.error("Error downloading file:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
+  // useEffect(() => {
+  //   getStudentMarksData();
+  // }, [formData]);
   return (
-    <div className="h-full">
+    <div className="h-full flex flex-col justify-between">
       <Table>
         <TableHeader>
           <TableRow>
@@ -109,6 +125,6 @@ const StudentTable: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default StudentTable;

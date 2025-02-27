@@ -32,14 +32,13 @@ export default function Selector({
         ref={dropdownRef}
         role="button"
         tabIndex={0}
-        className="w-full p-3 border border-gray-300 rounded bg-white text-gray-700 cursor-pointer focus:ring-2 focus:ring-purple-400 transition flex justify-between items-center"
+        className="truncate w-full p-3 border border-gray-300 rounded bg-white text-gray-700 cursor-pointer focus:ring-2 focus:ring-purple-400 transition flex justify-between items-center"
         onClick={() => setIsOpen((prev) => !prev)}
         onBlur={() => setTimeout(() => setIsOpen(false), 200)}
       >
         {value
           ? options.find((opt) => opt.value === value)?.label
           : placeholder}
-
         {/* SVG Arrow with Rotation Animation */}
         <svg
           width="15"

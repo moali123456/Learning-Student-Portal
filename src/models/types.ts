@@ -58,6 +58,7 @@ export type FormData = {
   grade: string;
   level: string;
   studentCode: string;
+  reportType: string;
 };
 export type ChartDataParams = {
   title: string;
