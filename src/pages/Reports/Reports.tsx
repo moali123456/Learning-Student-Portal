@@ -69,8 +69,7 @@ export default function SelectionForm() {
 
   useEffect(() => {
     fetchOptions();
-  }, [formData.selectedYear]); // Fetch options when year changes
-
+  }, [formData.selectedYear]);
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value };
@@ -79,7 +78,7 @@ export default function SelectionForm() {
     });
   };
   const handleSearchClick = () => {
-    setSubmittedData(formData); // Updates the data only when clicking search
+    setSubmittedData(formData); 
   };
 
   const renderComponent = () => {
