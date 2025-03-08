@@ -140,54 +140,7 @@ const ReadingQuestions: React.FC = () => {
   const handleTextChange = (event: ChangeEvent<HTMLTextAreaElement>): void => {
     setText(event.target.value);
   };
-  // useEffect(() => {
-  //   const fetchTopicsAndQuestions = async () => {
-  //     try {
-  //       setLoading(true);
 
-  //       // Fetch topics
-  //       const topicsData = await getAllTopicsReading(examId, 1);
-  //       const topics = topicsData?.Data?.Topics;
-
-  //       if (topics && topics.length > 0) {
-  //         // Fetch questions for each topic
-  //         const topicsWithQuestionsPromises = topics?.map(
-  //           async (topic: any) => {
-  //             const questionsData = await getAllQuestionsTopicReading(
-  //               topic?.Id
-  //             );
-  //             console.log("Eslaaaaaaaaaam", questionsData?.Data);
-  //             // setMatchingQuestion(
-  //             //   questionsData?.Data?.GetMatchingQuestions[0]
-  //             //     ?.MatchingQuestion || []
-  //             // );
-  //             // setMatchingAnswer(
-  //             //   questionsData?.Data?.GetMatchingQuestions[0]?.Answers || []
-  //             // );
-  //             return {
-  //               TitleAr: topic?.TitleAr,
-  //               TitleEn: topic?.TitleEn,
-  //               topicId: topic?.Id,
-  //               TopicContent: topic?.TopicContent,
-  //               questions: questionsData?.Data?.GetQuestions || [],
-  //             };
-  //           }
-  //         );
-
-  //         const topicsWithQuestions = await Promise.all(
-  //           topicsWithQuestionsPromises
-  //         );
-  //         setTopicsWithQuestions(topicsWithQuestions);
-  //       }
-  //     } catch (err: any) {
-  //       setError(err.message || "Failed to fetch topics and questions");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchTopicsAndQuestions();
-  // }, [examId]);
   useEffect(() => {
     const fetchTopicsAndQuestions = async () => {
       try {
@@ -249,7 +202,7 @@ const ReadingQuestions: React.FC = () => {
   const renderQuestionMatch = () => {
     console.log("matchingQuestion", matchingQuestion);
     return (
-      <div className="question-item">
+      <div className="question-item">cvbbcxcbvc
         {matchingQuestion?.length > 0 &&
           matchingQuestion.map((match: any, matchIndex: number) => (
             <div key={match.Id} className="choose-the-correct-answer">

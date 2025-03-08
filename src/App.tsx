@@ -52,7 +52,7 @@ const App = () => {
         { path: "questions/:examId", element: <Questions /> },
         { path: "reading-questions", element: <ReadingQuestions /> },
         { path: "writing-questions", element: <WritingQuestions /> },
-        { path: "*", element: <NotFound /> }
+        { path: "*", element: <NotFound /> },
       ],
     },
     {

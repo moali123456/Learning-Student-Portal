@@ -5,6 +5,7 @@ import ReadingQuestions from "../../component/reading/reading-questions";
 import SpeakingQuestions from "../../component/speaking/speaking-questions";
 import WritingQuestions from "../../component/writing/writing-questions";
 import ListingQuestions from "../../component/listening/listening";
+import Test from "../../component/reading/Test";
 
 const Questions: React.FC = () => {
   const navigate = useNavigate();
@@ -27,7 +28,8 @@ const Questions: React.FC = () => {
     case "Listening":
       return <ListingQuestions />;
     default:
-      return <div>Default</div>;
+      return <Test />;
+    // return <div>Default</div>;
   }
 };
 
