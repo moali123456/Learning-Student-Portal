@@ -1,3 +1,4 @@
+import { Controller, useFormContext } from "react-hook-form";
 import { TrueFalseQuestion as TrueFalseQuestionType } from "../../../api/services/exams.services";
 
 type TrueFalseQuestionProps = {
@@ -7,58 +8,55 @@ type TrueFalseQuestionProps = {
 
 export default function TrueFalseQuestion({
   question,
-
   index,
 }: TrueFalseQuestionProps) {
-  console.log("firstquestion", question);
+  const { control } = useFormContext();
+
   return (
-    <div className="mb-3">
-      <p className="font-semibold flex mb-1">
-        <span className="me-2 flex justify-center items-center w-5 h-5 rounded-full bg-black text-white">
+    <div>
+      {/* Question Number & Title */}
+      <h2 className="text-lg font-bold flex items-center mb-3">
+        <span className="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">
           {index}
         </span>
-        True or False
-      </p>
-      <div className="flex flex-col justify-start border border-[#ebebebeb] p-6 rounded-xl">
-        <p>{question.ContentQuestion}</p>
-        <div className="flex justify-start mt-2">
-          <div className="w-1/4 ">
-            <span className="flex justify-start items-center">
-              <input
-                type="radio"
-                name={`question-${question.Id}`}
-                value={"true"}
-                className="me-1 w-5 h-5 text-purple-600 bg-gray-200 border-gray-300 focus:ring-purple-500"
-                onChange={() => {
-                  // setSelectedAnswers((prev) => ({
-                  //   ...prev,
-                  //   [question.Id]: "",
-                  // }));
-                  onBlur({ [question.Id]: true });
-                }}
-              />
-              true
-            </span>
-          </div>
-          <div className="w-1/4">
-            <span className="flex justify-start items-center">
-              <input
-                type="radio"
-                name={`question-${question.Id}`}
-                value={"false"}
-                className="me-1 w-5 h-5 text-purple-600 bg-gray-200 border-gray-300 focus:ring-purple-500"
-                onChange={() => {
-                  // setSelectedAnswers((prev) => ({
-                  //   ...prev,
-                  //   [question.Id]: "d",
-                  // }));
-                  onBlur({ [question.Id]: false });
-                }}
-              />
-              false
-            </span>
-          </div>
-        </div>
+        True or False?
+      </h2>
+      <div className="p-4 border rounded-xl shadow-sm">
+        {/* Question Content */}
+        <p className="mt-2 text-gray-600">{question.ContentQuestion}</p>
+
+        {/* True/False Radio Buttons */}
+        <Controller
+          name={question.Id}
+          control={control}
+          render={({ field }) => (
+            <div className="flex space-x-6 mt-3">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  {...field}
+                  value="true"
+                  checked={field.value === "true"}
+                  className="hidden peer"
+                />
+                <span className="w-4 h-4 border border-gray-400 rounded-full peer-checked:bg-green-500"></span>
+                <span className="text-green-600 font-medium">True</span>
+              </label>
+
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  {...field}
+                  value="false"
+                  checked={field.value === "false"}
+                  className="hidden peer"
+                />
+                <span className="w-4 h-4 border border-gray-400 rounded-full peer-checked:bg-red-500"></span>
+                <span className="text-red-600 font-medium">False</span>
+              </label>
+            </div>
+          )}
+        />
       </div>
     </div>
   );

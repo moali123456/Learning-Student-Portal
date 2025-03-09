@@ -49,7 +49,7 @@ const App = () => {
         { path: "exams", element: <Exams /> },
         { path: "assessments", element: <Assessments /> },
         { path: "details/:examId", element: <AssessmentsDetails /> },
-        { path: "questions/:examId", element: <Questions /> },
+        { path: "questions/:skill/:examId", element: <Questions /> },
         { path: "reading-questions", element: <ReadingQuestions /> },
         { path: "writing-questions", element: <WritingQuestions /> },
         { path: "*", element: <NotFound /> },

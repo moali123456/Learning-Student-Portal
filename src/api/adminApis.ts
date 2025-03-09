@@ -102,8 +102,6 @@ export const getAllQuestionsTopicReading = async (id) => {
     const response = await apiInstance.get(
       `/Student/GetStudentTopicsQuestions?topicId=${id}`
     );
-
-    // Assuming the response data contains the availability information
     return response.data;
   } catch (error: any) {
     throw error.response

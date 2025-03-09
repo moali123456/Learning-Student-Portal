@@ -1,36 +1,52 @@
-import React, { ChangeEvent, useState } from "react";
+import React from "react";
 
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import ListingQuestions from "../../component/listening/listening";
 import ReadingQuestions from "../../component/reading/reading-questions";
+import ReadingExam from "../../component/reading/ReadingExam";
 import SpeakingQuestions from "../../component/speaking/speaking-questions";
 import WritingQuestions from "../../component/writing/writing-questions";
-import ListingQuestions from "../../component/listening/listening";
-import Test from "../../component/reading/Test";
+import Header from "../../layout/header";
+import Footer from "../../layout/footer";
 
 const Questions: React.FC = () => {
-  const navigate = useNavigate();
-  const { examId } = useParams();
-  const location = useLocation();
-  const { skillName } = location.state || {};
-  // console.log("skillName", skillName);
-
-  switch (location.state?.skillName) {
-    case "Reading":
-      return (
-        <div className="mt-5">
-          <ReadingQuestions />
-        </div>
-      );
-    case "Writing":
-      return <WritingQuestions />;
-    case "Speaking":
-      return <SpeakingQuestions />;
-    case "Listening":
-      return <ListingQuestions />;
-    default:
-      return <Test />;
-    // return <div>Default</div>;
+  const { skill, examId } = useParams<{
+    skill: string;
+    examId: string;
+  }>();
+  function renderExam() {
+    switch (skill) {
+      case "Reading":
+        return (
+          <div className="mt-5">
+            <ReadingQuestions />
+          </div>
+        );
+      case "Reading2":
+        return (
+          <div className="mt-5">
+            <ReadingExam examId={examId} skillNumber={1} />
+          </div>
+        );
+      case "Writing":
+        return <WritingQuestions />;
+      case "Speaking":
+        return <SpeakingQuestions />;
+      case "Listening":
+        return <ListingQuestions />;
+      default:
+        return <div>Default</div>;
+    }
   }
+  return (
+    <div className="min-h-[100vh] flex flex-col justify-between">
+      <div className="mt-5">
+        <Header />
+      </div>
+      {renderExam()}
+      <Footer />
+    </div>
+  );
 };
 
 export default Questions;

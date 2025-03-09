@@ -1,0 +1,159 @@
+import axios from "axios";
+
+interface Answer {
+  Id: string;
+  QuestionId: string;
+  Answer: string;
+}
+export type MatchingAnswer = {
+  Id: string;
+  Answer: string;
+};
+export type MatchingQuestionItem = {
+  Id: string;
+  ContentQuestion: string;
+};
+
+interface BaseQuestion {
+  Id: string;
+  ContentQuestion: string;
+  QuestionType: QuestionType;
+  File?: string | null;
+  Score: number;
+  Answers: Answer[];
+}
+
+enum QuestionType {
+  MCQ = 1,
+  Writing = 2,
+  Matching = 3,
+  DragDrop = 4,
+  Complete = 5,
+  TrueFalse = 6,
+}
+
+export interface MCQQuestion extends BaseQuestion {
+  QuestionType: QuestionType.MCQ;
+  Answers: Answer[];
+}
+
+export interface WritingQuestion extends BaseQuestion {
+  QuestionType: QuestionType.Writing;
+  Answers: []; // No predefined answers
+}
+
+export type MatchingQuestion = {
+  Score: number;
+  TitleAr: string;
+  TitleEn: string;
+  QuestionType: QuestionType.Matching;
+  MatchingQuestion: MatchingQuestionItem[]; // The left side of the match
+  Answers: MatchingAnswer[]; // The right side options
+};
+interface DragDropQuestion extends BaseQuestion {
+  QuestionType: QuestionType.DragDrop;
+  Answers: Answer[];
+}
+
+interface CompleteQuestion extends BaseQuestion {
+  QuestionType: QuestionType.Complete;
+  Answers: [];
+}
+export interface TrueFalseQuestion extends BaseQuestion {
+  QuestionType: QuestionType.TrueFalse;
+  Answers: [];
+}
+
+// Union Type for All Questions
+export type Question =
+  | MCQQuestion
+  | WritingQuestion
+  | DragDropQuestion
+  | CompleteQuestion
+  | TrueFalseQuestion;
+export type Topic = {
+  Id: string;
+  TitleAr: string;
+  TitleEn: string;
+  File?: any;
+  TopicContent?: any;
+};
+export type ExamData = {
+  Id: string;
+  StudentModelExamId?: string | null;
+  NameAr: string;
+  NameEn: string;
+  Piece?: string | null;
+  Skill: number;
+  SubjectId: string;
+  SubjectName: string;
+  GradeId: string;
+  GradeName: string;
+  LevelId?: string | null;
+  LevelName?: string | null;
+  CreatedOn: string;
+  NumberOfMandatoryQuestions: number;
+  TimerPerMinutes?: number | null;
+  Topics: Topic[];
+};
+
+// Represents the full API response structure
+export type ExamApiResponse = {
+  StatusCode: number;
+  Message: string;
+  Data: ExamData;
+};
+export type QuestionResponse = {
+  StatusCode: number;
+  Message: string;
+  Data: {
+    GetQuestions: Question[];
+    GetMatchingQuestions?: MatchingQuestion[];
+  };
+};
+
+export const fetchSkillExamData = async (
+  skillNumber: number | string,
+  id: number | string
+) => {
+  try {
+    const response = await axios.get<ExamApiResponse>(
+      `http://localhost:4111/StudentExamData`
+    );
+    // const response = await apiInstance.get<ApiResponse<T>>(
+    //   `/Student/GetStudentModelExam?Skill=${skillNumber}&ExamId=${id}`
+    // );
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw (
+        error.response?.data ||
+        new Error(`Failed to fetch data from GetStudentModelExam`)
+      );
+    }
+    throw new Error("An unknown error occurred while fetching data");
+  }
+};
+
+export const fetchSkillExamQuestions = async (
+  skillNumber: number | string,
+  topicId: number | string
+) => {
+  try {
+    const response = await axios.get<QuestionResponse>(
+      `http://localhost:4111/getQuestionsByTopic/${topicId}`
+    );
+    // const response = await apiInstance.get<ApiResponse<T>>(
+    //   `/Student/GetStudentTopicsQuestions?Skill=${skillNumber}&topicId=${topicId}`
+    // );
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw (
+        error.response?.data ||
+        new Error(`Failed to fetch questions from GetStudentTopicsQuestions`)
+      );
+    }
+    throw new Error("An unknown error occurred while fetching questions");
+  }
+};
