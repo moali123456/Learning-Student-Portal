@@ -1,6 +1,7 @@
 import axios from "axios";
+import apiInstance from "../axiosInstance";
 
-interface Answer {
+export interface Answer {
   Id: string;
   QuestionId: string;
   Answer: string;
@@ -50,14 +51,14 @@ export type MatchingQuestion = {
   MatchingQuestion: MatchingQuestionItem[]; // The left side of the match
   Answers: MatchingAnswer[]; // The right side options
 };
-interface DragDropQuestion extends BaseQuestion {
+export interface DragDropQuestion extends BaseQuestion {
   QuestionType: QuestionType.DragDrop;
   Answers: Answer[];
 }
 
-interface CompleteQuestion extends BaseQuestion {
+export interface CompleteQuestion extends BaseQuestion {
   QuestionType: QuestionType.Complete;
-  Answers: [];
+  Answers: Answer[];
 }
 export interface TrueFalseQuestion extends BaseQuestion {
   QuestionType: QuestionType.TrueFalse;
@@ -120,7 +121,7 @@ export const fetchSkillExamData = async (
     const response = await axios.get<ExamApiResponse>(
       `http://localhost:4111/StudentExamData`
     );
-    // const response = await apiInstance.get<ApiResponse<T>>(
+    // const response = await apiInstance.get<ExamApiResponse>(
     //   `/Student/GetStudentModelExam?Skill=${skillNumber}&ExamId=${id}`
     // );
     return response.data;
@@ -143,7 +144,7 @@ export const fetchSkillExamQuestions = async (
     const response = await axios.get<QuestionResponse>(
       `http://localhost:4111/getQuestionsByTopic/${topicId}`
     );
-    // const response = await apiInstance.get<ApiResponse<T>>(
+    // const response = await apiInstance.get<QuestionResponse>(
     //   `/Student/GetStudentTopicsQuestions?Skill=${skillNumber}&topicId=${topicId}`
     // );
     return response.data;

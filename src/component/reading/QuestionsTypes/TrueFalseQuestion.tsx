@@ -1,6 +1,5 @@
-import { Controller, useFormContext } from "react-hook-form";
 import { TrueFalseQuestion as TrueFalseQuestionType } from "../../../api/services/exams.services";
-
+import FormController from "./FormController";
 type TrueFalseQuestionProps = {
   question: TrueFalseQuestionType;
   index: number;
@@ -10,7 +9,7 @@ export default function TrueFalseQuestion({
   question,
   index,
 }: TrueFalseQuestionProps) {
-  const { control } = useFormContext();
+
 
   return (
     <div>
@@ -26,36 +25,24 @@ export default function TrueFalseQuestion({
         <p className="mt-2 text-gray-600">{question.ContentQuestion}</p>
 
         {/* True/False Radio Buttons */}
-        <Controller
+        <FormController
           name={question.Id}
-          control={control}
-          render={({ field }) => (
-            <div className="flex space-x-6 mt-3">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="radio"
-                  {...field}
-                  value="true"
-                  checked={field.value === "true"}
-                  className="hidden peer"
-                />
-                <span className="w-4 h-4 border border-gray-400 rounded-full peer-checked:bg-green-500"></span>
-                <span className="text-green-600 font-medium">True</span>
-              </label>
-
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="radio"
-                  {...field}
-                  value="false"
-                  checked={field.value === "false"}
-                  className="hidden peer"
-                />
-                <span className="w-4 h-4 border border-gray-400 rounded-full peer-checked:bg-red-500"></span>
-                <span className="text-red-600 font-medium">False</span>
-              </label>
-            </div>
-          )}
+          type="radio"
+          options={[
+            {
+              value: "true",
+              label: "True",
+              style: {
+                text: "text-green-500",
+                peer: "peer-checked:bg-green-500",
+              },
+            },
+            {
+              value: "false",
+              label: "False",
+              style: { text: "text-red-500", peer: "peer-checked:bg-red-500" },
+            },
+          ]}
         />
       </div>
     </div>

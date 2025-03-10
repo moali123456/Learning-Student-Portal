@@ -1,8 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSkillExamQestions } from "../../hooks/useSkillExamQestions";
-import { Schema } from "./QuestionsTypes/ValidationSchema";
 import QuestionRenderer from "./QuestionsTypes/QuestionRenderer";
+import { Schema } from "./QuestionsTypes/ValidationSchema";
 type ReadingExamProps = {
   examId: string | undefined;
   skillNumber: number;
@@ -17,16 +18,28 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
   });
   const {
     handleSubmit,
+    watch,
     formState: { errors },
     getValues,
   } = methods;
+  const fromValues = watch();
+  // handle frro writing
+  // const searchTerm = watch("82c29821-0189-41b9-862b-f7bca30d096f");
+  // const debouncedSearch = useDebounce(searchTerm, 500);
+  // useEffect(() => {
+  //   if (debouncedSearch) {
+  //     console.log("Fetching results for:", debouncedSearch);
+  //   }
+  // }, [debouncedSearch]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     console.log("Form Data:", data);
   };
+  useEffect(() => {
+    console.log("fromValues", fromValues);
+  }, [fromValues]);
 
-  console.log("topicsWithQuestions", topicsWithQuestions);
-
+  // console.log("topicsWithQuestions", topicsWithQuestions);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {isError}</div>;
 
@@ -56,7 +69,10 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
                     indexQues = indexQues + 1;
                     return (
                       <div key={indexQues} className="mb-10">
-                        <QuestionRenderer question={question} index={indexQues} />
+                        <QuestionRenderer
+                          question={question}
+                          index={indexQues}
+                        />
                       </div>
                     );
                   })}
