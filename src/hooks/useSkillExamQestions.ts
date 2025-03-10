@@ -18,6 +18,9 @@ export const useSkillExamQestions = (
   const [topicsWithQuestions, setTopicsWithQuestions] = useState<
     TopicWithQuestions[]
   >([]);
+  const [Questions, setQuestions] = useState<
+    (Question | MatchingQuestion)[] | null
+  >(null);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [isError, setError] = useState<string | null>(null);
 
@@ -27,7 +30,6 @@ export const useSkillExamQestions = (
     const fetchTopicsAndQuestions = async () => {
       try {
         setLoading(true);
-
         // Fetch exam data which includes topics
         const response = await fetchSkillExamData(skillNumber, examId);
 
@@ -56,11 +58,13 @@ export const useSkillExamQestions = (
               questionResponse.Data?.GetMatchingQuestions
                 ? questionResponse.Data.GetMatchingQuestions
                 : [];
+
             return { topic, questions: [...questions, ...matchingQuestion] };
           })
         );
 
         setTopicsWithQuestions(topicsWithQuestionsData);
+        setQuestions(topicsWithQuestionsData.flatMap((item) => item.questions));
       } catch (err) {
         setError(`Failed to load topics or questions.${err}`);
       } finally {
@@ -71,5 +75,5 @@ export const useSkillExamQestions = (
     fetchTopicsAndQuestions();
   }, [skillNumber, examId]);
 
-  return { topicsWithQuestions, isLoading, isError };
+  return { topicsWithQuestions, Questions, isLoading, isError };
 };

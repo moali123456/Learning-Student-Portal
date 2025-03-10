@@ -9,10 +9,8 @@ type ReadingExamProps = {
   skillNumber: number;
 };
 export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
-  const { topicsWithQuestions, isLoading, isError } = useSkillExamQestions(
-    skillNumber!,
-    examId!
-  );
+  const { topicsWithQuestions, Questions, isLoading, isError } =
+    useSkillExamQestions(skillNumber!, examId!);
   const methods = useForm({
     resolver: zodResolver(Schema),
   });
@@ -39,7 +37,7 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
     console.log("fromValues", fromValues);
   }, [fromValues]);
 
-  // console.log("topicsWithQuestions", topicsWithQuestions);
+  console.log("topicsWithQuestions", { Questions });
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {isError}</div>;
 
