@@ -1,13 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useSkillExamQestions } from "../../hooks/useSkillExamQestions";
-import QuestionRenderer from "./QuestionsTypes/QuestionRenderer";
-import {
-  generateDefaultValues,
-  generateSchema,
-} from "./QuestionsTypes/ValidationSchema";
+import QuestionRenderer from "../QuestionsTypes/QuestionRenderer";
+import { generateSchema } from "./ValidationSchema";
 type ReadingExamProps = {
   examId: string | undefined;
   skillNumber: number;
@@ -26,14 +23,8 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
     handleSubmit,
     watch,
     formState: { errors },
-    getValues,
   } = methods;
   const fromValues = watch();
-
-  const watchedValues = watch();
-  const previousValues = useRef({
-    ...generateDefaultValues(Questions),
-  });
 
   const onSubmit = (data: unknown) => {
     console.log("Form Data:", data);
@@ -41,23 +32,12 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
   useEffect(() => {
     console.log("fromValues", fromValues);
   }, [fromValues]);
-  // const onChangeForm = () => {
-  //   Object.keys(watchedValues).forEach((key) => {
-  //     const field = key as keyof FormValues;
-  //     if (watchedValues[field] !== previousValues.current[field]) {
-  //       console.log(
-  //         `Changed Field: ${field}, New Value: ${watchedValues[field]}`
-  //       );
-  //       previousValues.current[field] = watchedValues[field]; // Update previous value
-  //     }
-  //   });
-  // };
-  // console.log("topicsWithQuestions", { Questions });
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {isError}</div>;
   return (
     <div className="questions-wrapper">
-      {/* <ExamHeader /> */}
+      <ExamHeader />
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-10">
           {topicsWithQuestions.map(({ topic, questions }, index) => {
@@ -113,51 +93,51 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
   );
 }
 
-// function ExamHeader() {
-//   return (
-//     <>
-//       <div className="reading-instructions">
-//         <div className="left-side">
-//           <img src="/assets/home/highlight.svg" alt="" />
-//           <div className="main-points">
-//             <p className="title">Reading</p>
-//             <ul className="points">
-//               <li>
-//                 Lorem Ipsum is simply dummy text of the printing and typesetting
-//                 industry.
-//               </li>
-//               <li>
-//                 Lorem Ipsum is simply dummy text of the printing and typesetting
-//                 industry.
-//               </li>
-//               <li>
-//                 Lorem Ipsum is simply dummy text of the printing and typesetting
-//                 industry.
-//               </li>
-//             </ul>
-//           </div>
-//         </div>
-//         <div className="right-side-img">
-//           <div className="whole-img">
-//             <div className="img-bg">
-//               <img src="/assets/home/reading-a-book.svg" alt="" />
-//             </div>
-//           </div>
-//           <div className="extra-writing-instruction">
-//             <div className="instruction-item">
-//               <img src="/assets/exams/keyboard.svg" alt="" />
-//               <p className="keyboard">Write with Keyboard</p>
-//             </div>
-//             <div className="instruction-item">
-//               <img src="/assets/exams/write.svg" alt="" />
-//               <p>Hand writing</p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       <div className="reading-timer">
-//         <img src="/assets/home/timer.svg" alt="" />
-//       </div>
-//     </>
-//   );
-// }
+function ExamHeader() {
+  return (
+    <>
+      <div className="reading-instructions">
+        <div className="left-side">
+          <img src="/assets/home/highlight.svg" alt="" />
+          <div className="main-points">
+            <p className="title">Reading</p>
+            <ul className="points">
+              <li>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.
+              </li>
+              <li>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.
+              </li>
+              <li>
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry.
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="right-side-img">
+          <div className="whole-img">
+            <div className="img-bg">
+              <img src="/assets/home/reading-a-book.svg" alt="" />
+            </div>
+          </div>
+          <div className="extra-writing-instruction">
+            <div className="instruction-item">
+              <img src="/assets/exams/keyboard.svg" alt="" />
+              <p className="keyboard">Write with Keyboard</p>
+            </div>
+            <div className="instruction-item">
+              <img src="/assets/exams/write.svg" alt="" />
+              <p>Hand writing</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="reading-timer">
+        <img src="/assets/home/timer.svg" alt="" />
+      </div>
+    </>
+  );
+}

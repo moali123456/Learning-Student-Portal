@@ -1,7 +1,7 @@
 import {
   MatchingQuestion as MatchingQuestionType,
   Question,
-} from "../../../api/services/exams.services";
+} from "../../api/services/exams.services";
 import ArrangeQuestion from "./ArrangeQuestion";
 import CompleteQuestion from "./CompleteQuestion";
 import MatchingQuestion from "./MatchingQuestion";

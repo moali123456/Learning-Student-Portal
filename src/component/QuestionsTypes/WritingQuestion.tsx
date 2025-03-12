@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { WritingQuestion as WritingQuestionType } from "../../../api/services/exams.services";
-import FormController from "./FormController";
-import { useDebounce } from "../../../hooks/useDebounce";
+import { WritingQuestion as WritingQuestionType } from "../../api/services/exams.services";
+import FormController from "../FormController/FormController";
+import { useDebounce } from "../../hooks/useDebounce";
 
 type WritingQuestionProps = {
   question: WritingQuestionType;

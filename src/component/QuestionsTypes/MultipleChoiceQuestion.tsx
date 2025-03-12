@@ -1,8 +1,8 @@
 import { useFormContext } from "react-hook-form";
-import { MCQQuestion } from "../../../api/services/exams.services";
-import FormController from "./FormController";
+import { MCQQuestion } from "../../api/services/exams.services";
+import FormController from "../FormController/FormController";
 import { useCallback, useEffect, useState } from "react";
-import { useDebounce } from "../../../hooks/useDebounce";
+import { useDebounce } from "../../hooks/useDebounce";
 
 type MultipleChoiceQuestionProps = {
   question: MCQQuestion;

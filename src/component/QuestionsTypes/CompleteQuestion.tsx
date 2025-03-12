@@ -10,8 +10,8 @@ import { useFormContext } from "react-hook-form";
 import {
   Answer,
   CompleteQuestion as CompleteQuestionType,
-} from "../../../api/services/exams.services";
-import { useDebounce } from "../../../hooks/useDebounce";
+} from "../../api/services/exams.services";
+import { useDebounce } from "../../hooks/useDebounce";
 
 interface CompleteQuestionProps {
   question: CompleteQuestionType;

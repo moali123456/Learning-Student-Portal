@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   MatchingQuestion,
   Question,
-} from "../../../api/services/exams.services";
+} from "../../api/services/exams.services";
 const Answer = z.object({
   Id: z.string().uuid(),
   QuestionId: z.string().uuid(),

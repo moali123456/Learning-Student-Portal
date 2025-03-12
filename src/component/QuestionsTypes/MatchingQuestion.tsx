@@ -11,8 +11,8 @@ import {
   MatchingAnswer,
   MatchingQuestionItem,
   MatchingQuestion as MatchingQuestionType,
-} from "../../../api/services/exams.services";
-import { useDebounce } from "../../../hooks/useDebounce";
+} from "../../api/services/exams.services";
+import { useDebounce } from "../../hooks/useDebounce";
 
 interface MatchingQuestionProps {
   question: MatchingQuestionType;

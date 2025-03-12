@@ -1,8 +1,8 @@
 import { useFormContext } from "react-hook-form";
-import { TrueFalseQuestion as TrueFalseQuestionType } from "../../../api/services/exams.services";
-import FormController from "./FormController";
+import { TrueFalseQuestion as TrueFalseQuestionType } from "../../api/services/exams.services";
+import FormController from "../FormController/FormController";
 import { useCallback, useEffect, useState } from "react";
-import { useDebounce } from "../../../hooks/useDebounce";
+import { useDebounce } from "../../hooks/useDebounce";
 type TrueFalseQuestionProps = {
   question: TrueFalseQuestionType;
   index: number;

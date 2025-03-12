@@ -7,8 +7,8 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Answer, DragDropQuestion } from "../../../api/services/exams.services";
-import { useDebounce } from "../../../hooks/useDebounce";
+import { Answer, DragDropQuestion } from "../../api/services/exams.services";
+import { useDebounce } from "../../hooks/useDebounce";
 
 interface ArrangeQuestionProps {
   question: DragDropQuestion;
