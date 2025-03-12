@@ -1,5 +1,6 @@
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { MCQQuestion } from "../../../api/services/exams.services";
+import FormController from "./FormController";
 
 type MultipleChoiceQuestionProps = {
   question: MCQQuestion;
@@ -10,8 +11,8 @@ export default function MultipleChoiceQuestion({
   question,
   index,
 }: MultipleChoiceQuestionProps) {
-  const { control } = useFormContext();
-
+  const { getFieldState } = useFormContext();
+  const isError = getFieldState(question?.Id)?.error;
   return (
     <div>
       {/* Question Header */}
@@ -23,35 +24,25 @@ export default function MultipleChoiceQuestion({
       </h2>
 
       {/* Question Box */}
-      <div className="p-4 border rounded-xl shadow-sm">
-        <p className="mt-2 text-gray-600">{question.ContentQuestion.trim()}</p>
+      <div
+        className={`p-4 border  rounded-xl shadow-sm ${
+          isError && "border-red-500"
+        }`}
+      >
+        <p className="mt-2  font-medium">{question.ContentQuestion.trim()}</p>
 
         {/* Multiple Choice Options */}
-        <Controller
+        <FormController
           name={question.Id}
-          control={control}
-          render={({ field }) => (
-            <div className="mt-3 space-y-2">
-              {question.Answers.map((answer) => (
-                <label
-                  key={answer.Id}
-                  className="flex items-center space-x-2 cursor-pointer"
-                >
-                  <input
-                    type="radio"
-                    {...field}
-                    value={answer.Id}
-                    checked={field.value === answer.Id}
-                    className="hidden peer"
-                  />
-                  <span className="w-4 h-4 border border-gray-400 rounded-full peer-checked:bg-blue-500"></span>
-                  <span className="text-gray-700 font-medium">
-                    {answer.Answer}
-                  </span>
-                </label>
-              ))}
-            </div>
-          )}
+          type="radio"
+          options={question.Answers.map((answer) => ({
+            value: answer.Id,
+            label: answer.Answer,
+            style: {
+              text: "peer-checked:text-green-600",
+              peer: "peer-checked:bg-green-500",
+            },
+          }))}
         />
       </div>
     </div>

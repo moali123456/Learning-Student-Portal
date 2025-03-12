@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSkillExamQestions } from "../../hooks/useSkillExamQestions";
 import QuestionRenderer from "./QuestionsTypes/QuestionRenderer";
-import { Schema } from "./QuestionsTypes/ValidationSchema";
+import { z } from "zod";
+import { generateSchema } from "./QuestionsTypes/ValidationSchema";
 type ReadingExamProps = {
   examId: string | undefined;
   skillNumber: number;
@@ -11,8 +12,12 @@ type ReadingExamProps = {
 export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
   const { topicsWithQuestions, Questions, isLoading, isError } =
     useSkillExamQestions(skillNumber!, examId!);
+
+  const examSchema = z.object({
+    ...generateSchema(Questions),
+  });
   const methods = useForm({
-    resolver: zodResolver(Schema),
+    resolver: zodResolver(examSchema),
   });
   const {
     handleSubmit,
@@ -40,7 +45,6 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
   console.log("topicsWithQuestions", { Questions });
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {isError}</div>;
-
   return (
     <div className="questions-wrapper">
       {/* <ExamHeader /> */}

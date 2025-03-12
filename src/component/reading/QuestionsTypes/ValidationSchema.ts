@@ -1,40 +1,53 @@
-import { z, ZodTypeAny } from "zod";
+import { z } from "zod";
+import {
+  MatchingQuestion,
+  Question,
+} from "../../../api/services/exams.services";
+const Answer = z.object({
+  Id: z.string().uuid(),
+  QuestionId: z.string().uuid(),
+  Answer: z.string().min(1),
+});
+const MatchingAnswer = z.object({
+  Id: z.string().uuid(),
+  Answer: z.string().min(1),
+});
+export const generateSchema = (
+  questions: (Question | MatchingQuestion)[] | null
+) => {
+  const schemaObject: Record<string, z.ZodTypeAny> = {};
 
-const generateSchema = () => {
-  return z.object({
-    topics: z.array(
-      z.object({
-        topicId: z.string(),
-        questions: z.array(
-          z.object({
-            questionId: z.string(),
-            answer: z.union([
-              z.string().min(1, "This field is required"), // For text answers
-              z.array(z.string()).min(1, "At least one answer is required"), // For multiple choice
-            ]),
-          })
-        ),
-      })
-    ),
+  questions?.map((question) => {
+    if ("Id" in question) {
+      switch (question.QuestionType) {
+        case 1: // MCQ Question
+          schemaObject[question.Id] = z.string().min(1, "MCQ Required");
+          break;
+        case 2: // Writing Question
+          schemaObject[question.Id] = z.string().min(1, "writing Required");
+          break;
+        case 4: // Arrange Question
+          schemaObject[question.Id] = z
+            .array(Answer)
+            .nonempty("drag all data ");
+          break;
+        case 5: // Complete Question
+          schemaObject[question.Id] = z
+            .array(Answer)
+            .nonempty("complete all data ");
+          break;
+        case 6: // True false Question
+          schemaObject[question.Id] = z.string();
+          break;
+        default:
+          schemaObject[question.Id] = z.string().optional();
+      }
+    } else if (question.QuestionType == 3) {
+      question.MatchingQuestion.map((matchQuestion) => {
+        schemaObject[matchQuestion.Id] = MatchingAnswer;
+      });
+    }
   });
-};
 
-export const Schema = generateSchema();
-export const inferZodSchema = (data: any): ZodTypeAny => {
-  if (typeof data === "string") return z.string();
-  if (typeof data === "number") return z.number();
-  if (typeof data === "boolean") return z.boolean();
-  if (Array.isArray(data))
-    return data.length > 0
-      ? z.array(inferZodSchema(data[0]))
-      : z.array(z.any());
-  if (typeof data === "object" && data !== null) {
-    const shape: Record<string, ZodTypeAny> = {};
-    Object.keys(data).forEach(
-      (key) => (shape[key] = inferZodSchema(data[key]))
-    );
-   
-    return z.object(shape);
-  }
-  return z.any();
+  return schemaObject;
 };

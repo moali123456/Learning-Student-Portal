@@ -11,6 +11,7 @@ import {
   MatchingQuestionItem,
   MatchingQuestion as MatchingQuestionType,
 } from "../../../api/services/exams.services";
+import { useFormContext } from "react-hook-form";
 
 interface MatchingQuestionProps {
   question: MatchingQuestionType;
@@ -21,6 +22,15 @@ export default function MatchingQuestion({
   question,
   index,
 }: MatchingQuestionProps) {
+  const {
+    setValue,
+    trigger,
+    getFieldState,
+    formState: { isSubmitted },
+  } = useFormContext();
+  const isError = question.MatchingQuestion.some((matchQuestion) => {
+    return getFieldState(matchQuestion?.Id)?.error === null;
+  });
   const [AnswersOptions, setAnswersOptions] = useState(question.Answers);
   const [MatchedQuestions, setMatchedQuestions] = useState(
     mapQuestions(question.MatchingQuestion)
@@ -108,6 +118,21 @@ export default function MatchingQuestion({
 
   useEffect(() => {
     console.log("fimaMatchedQuestions", MatchedQuestions);
+  }, [MatchedQuestions]);
+  useEffect(() => {
+    // console.log("arrange question error", { isSubmitted });
+    async function updateFormValue() {
+      Object.keys(MatchedQuestions).map(async (key) => {
+        await setValue(key, MatchedQuestions[key]);
+      });
+      //to run vaildation for this question after submit and if one answer not answered
+      // const isPlacedAnswerFull = placedAnswers.some((item) => item != null);
+      // if (isPlacedAnswerFull && isSubmitted) {
+      //   trigger(question.Id);
+      // }
+    }
+    updateFormValue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [MatchedQuestions]);
 
   return (

@@ -18,7 +18,13 @@ export default function ArrangeQuestion({
   question,
   index,
 }: ArrangeQuestionProps) {
-  const { setValue } = useFormContext();
+  const {
+    setValue,
+    trigger,
+    getFieldState,
+    formState: { isSubmitted },
+  } = useFormContext();
+  const isError = getFieldState(question?.Id)?.error;
   const [availableAnswers, setAvailableAnswers] = useState(question.Answers);
   const [placedAnswers, setPlacedAnswers] = useState<(Answer | null)[]>(
     new Array(question.Answers.length).fill(null)
@@ -92,7 +98,17 @@ export default function ArrangeQuestion({
     }
   };
   useEffect(() => {
-    setValue(question.Id, placedAnswers);
+    console.log("arrange question error", { isSubmitted });
+    async function updateFormValue() {
+      await setValue(question.Id, placedAnswers);
+      //to run vaildation for this question after submit and if one answer not answered
+      const isPlacedAnswerFull = placedAnswers.some((item) => item != null);
+      if (isPlacedAnswerFull && isSubmitted) {
+        trigger(question.Id);
+      }
+    }
+    updateFormValue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placedAnswers, question.Id, setValue]);
 
   return (
@@ -104,7 +120,11 @@ export default function ArrangeQuestion({
         </span>
         Drag and Drop to Arrange Words
       </h2>
-      <div className="p-4 border rounded-xl shadow-sm ">
+      <div
+        className={`p-4 border  rounded-xl shadow-sm ${
+          isError && "border-red-500"
+        }`}
+      >
         <DndContext onDragEnd={handleDragEnd}>
           {/* Top Available Answers */}
           <AvailableAnswersArea answers={availableAnswers} />
@@ -180,8 +200,11 @@ function AvailableAnswersArea({ answers }: { answers: Answer[] }) {
   });
 
   return (
-    <div className="bg-gray-200 min-w-80 min-h-[4.5rem] py-4 flex justify-center rounded ">
-      <div ref={setNodeRef} className="flex justify-center gap-4 h-full w-full">
+    <div className="bg-gray-200 min-w-50 min-h-[4.5rem] py-4 flex flex-wrap justify-center rounded ">
+      <div
+        ref={setNodeRef}
+        className="flex flex-wrap justify-center gap-4 h-full w-full"
+      >
         {answers.length ? (
           answers.map((answers) => {
             return <AnswerCard key={answers.Id} answer={answers} />;

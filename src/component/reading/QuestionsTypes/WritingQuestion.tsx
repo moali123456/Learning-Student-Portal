@@ -1,5 +1,6 @@
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { WritingQuestion as WritingQuestionType } from "../../../api/services/exams.services";
+import FormController from "./FormController";
 
 type WritingQuestionProps = {
   question: WritingQuestionType;
@@ -10,8 +11,6 @@ export default function WritingQuestion({
   question,
   index,
 }: WritingQuestionProps) {
-  const { control } = useFormContext();
-
   return (
     <div>
       {/* Question Header */}
@@ -23,20 +22,13 @@ export default function WritingQuestion({
       </h2>
 
       {/* Question Content */}
-      <p className="text-gray-600 mb-3">{question.ContentQuestion}</p>
+      <p className="font-medium mb-3">{question.ContentQuestion}</p>
 
       {/* Text Area for Answer */}
-      <Controller
+      <FormController
         name={question.Id}
-        control={control}
-        render={({ field }) => (
-          <textarea
-            {...field}
-            rows={5}
-            className="w-full h-40 resize-none p-3 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Type your answer here..."
-          />
-        )}
+        type="textarea"
+        placeholder="Type your answer here..."
       />
     </div>
   );

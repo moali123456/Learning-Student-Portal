@@ -1,3 +1,4 @@
+import { useFormContext } from "react-hook-form";
 import { TrueFalseQuestion as TrueFalseQuestionType } from "../../../api/services/exams.services";
 import FormController from "./FormController";
 type TrueFalseQuestionProps = {
@@ -9,8 +10,8 @@ export default function TrueFalseQuestion({
   question,
   index,
 }: TrueFalseQuestionProps) {
-
-
+  const { getFieldState } = useFormContext();
+  const isError = getFieldState(question?.Id)?.error;
   return (
     <div>
       {/* Question Number & Title */}
@@ -20,9 +21,13 @@ export default function TrueFalseQuestion({
         </span>
         True or False?
       </h2>
-      <div className="p-4 border rounded-xl shadow-sm">
+      <div
+        className={`p-4 border  rounded-xl shadow-sm ${
+          isError && "border-red-500"
+        }`}
+      >
         {/* Question Content */}
-        <p className="mt-2 text-gray-600">{question.ContentQuestion}</p>
+        <p className="mt-2  font-medium">{question.ContentQuestion}</p>
 
         {/* True/False Radio Buttons */}
         <FormController

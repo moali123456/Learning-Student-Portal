@@ -36,8 +36,7 @@ export default function FormController({
                   <label
                     key={option.value}
                     className={
-                      "flex items-center space-x-2 cursor-pointer text-gray-700 " +
-                      `${option?.style?.text}`
+                      "flex items-center space-x-2 cursor-pointer"
                     }
                   >
                     <input
@@ -45,7 +44,7 @@ export default function FormController({
                       {...field}
                       value={option.value}
                       checked={field.value === option.value}
-                      className="hidden peer"
+                      className="hidden peer "
                     />
                     <span
                       className={
@@ -53,7 +52,11 @@ export default function FormController({
                         `${option.style?.peer}`
                       }
                     ></span>
-                    <span className="font-medium ">{option.label}</span>
+                    <span
+                      className={`${option?.style?.text || "text-gray-700 "}`}
+                    >
+                      {option.label}
+                    </span>
                   </label>
                 ))}
               </div>
@@ -63,7 +66,9 @@ export default function FormController({
               <textarea
                 {...field}
                 rows={5}
-                className="w-full h-40 resize-none p-3 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full h-40 resize-none p-3 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors[name] && "border-red-600 focus:ring-neutral-50"
+                }`}
                 placeholder={placeholder}
               />
             );
@@ -79,9 +84,9 @@ export default function FormController({
           }
         }}
       />
-      {errors[name] && (
-        <p className="text-red-500">{errors[name]?.message as string}</p>
-      )}
+      {/* <p className="text-red-500 min-h-8">
+        {errors[name] ? (errors[name]?.message as string) : ""}
+      </p> */}
     </div>
   );
 }
