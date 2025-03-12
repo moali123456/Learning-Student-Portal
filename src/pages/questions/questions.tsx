@@ -8,6 +8,7 @@ import SpeakingQuestions from "../../component/speaking/speaking-questions";
 import WritingQuestions from "../../component/writing/writing-questions";
 import Header from "../../layout/header";
 import Footer from "../../layout/footer";
+import NotFound from "../not-found";
 
 const Questions: React.FC = () => {
   const { skill, examId } = useParams<{
@@ -15,27 +16,21 @@ const Questions: React.FC = () => {
     examId: string;
   }>();
   function renderExam() {
-    switch (skill) {
-      case "Reading":
-        return (
-          <div className="mt-5">
-            <ReadingQuestions />
-          </div>
-        );
-      case "Reading2":
+    switch (skill?.toLowerCase()) {
+      case "reading":
         return (
           <div className="mt-5">
             <ReadingExam examId={examId} skillNumber={1} />
           </div>
         );
-      case "Writing":
+      case "writing":
         return <WritingQuestions />;
-      case "Speaking":
+      case "speaking":
         return <SpeakingQuestions />;
-      case "Listening":
+      case "listening":
         return <ListingQuestions />;
       default:
-        return <div>Default</div>;
+        return <NotFound />;
     }
   }
   return (

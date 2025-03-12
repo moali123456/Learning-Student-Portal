@@ -190,7 +190,7 @@ function DroppableSlot({
   return (
     <div
       ref={setNodeRef}
-      className="border-e-2 last:border-none border-gray-400 rounded-lg w-32 h-10 flex items-center justify-center cursor-pointer"
+      className="border-e-2 last:border-none border-gray-400 rounded-lg min-w-32 h-10 flex items-center justify-center cursor-pointer"
     >
       {answer ? (
         <AnswerCard answer={answer} />
