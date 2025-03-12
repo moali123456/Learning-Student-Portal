@@ -11,6 +11,7 @@ import {
   Answer,
   CompleteQuestion as CompleteQuestionType,
 } from "../../../api/services/exams.services";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 interface CompleteQuestionProps {
   question: CompleteQuestionType;
@@ -102,7 +103,6 @@ export default function CompleteQuestion({
   };
 
   useEffect(() => {
-    console.log("arrange question error", { isSubmitted });
     async function updateFormValue() {
       await setValue(question.Id, placedAnswers);
       //to run vaildation for this question after submit and if one answer not answered
@@ -115,6 +115,14 @@ export default function CompleteQuestion({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placedAnswers, question.Id, setValue]);
 
+  // Debounced placedAnswers
+  const debouncedPlacedAnswers = useDebounce(placedAnswers, 1000);
+  useEffect(() => {
+    console.log(
+      `Debounced complete Answer ${question.Id} :`,
+      debouncedPlacedAnswers
+    );
+  }, [debouncedPlacedAnswers, question.Id]);
   return (
     <div>
       {/* Question Number & Title */}

@@ -51,3 +51,38 @@ export const generateSchema = (
 
   return schemaObject;
 };
+export const generateDefaultValues = (
+  questions: (Question | MatchingQuestion)[] | null
+) => {
+  const defaultValueObj: Record<string, null> = {};
+
+  questions?.map((question) => {
+    if ("Id" in question) {
+      switch (question.QuestionType) {
+        case 1: // MCQ Question
+          defaultValueObj[question.Id] = null;
+          break;
+        case 2: // Writing Question
+          defaultValueObj[question.Id] = null;
+          break;
+        case 4: // Arrange Question
+          defaultValueObj[question.Id] = null;
+          break;
+        case 5: // Complete Question
+          defaultValueObj[question.Id] = null;
+          break;
+        case 6: // True false Question
+          defaultValueObj[question.Id] = null;
+          break;
+        default:
+          defaultValueObj[question.Id] = null;
+      }
+    } else if (question.QuestionType == 3) {
+      question.MatchingQuestion.map((matchQuestion) => {
+        defaultValueObj[matchQuestion.Id] = null;
+      });
+    }
+  });
+
+  return defaultValueObj;
+};

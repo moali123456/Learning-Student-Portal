@@ -1,6 +1,8 @@
 import { useFormContext } from "react-hook-form";
 import { MCQQuestion } from "../../../api/services/exams.services";
 import FormController from "./FormController";
+import { useCallback, useEffect, useState } from "react";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 type MultipleChoiceQuestionProps = {
   question: MCQQuestion;
@@ -13,6 +15,21 @@ export default function MultipleChoiceQuestion({
 }: MultipleChoiceQuestionProps) {
   const { getFieldState } = useFormContext();
   const isError = getFieldState(question?.Id)?.error;
+
+  const [inputValue, setInputValue] = useState<"true" | "false" | "">("");
+  const debouncedValue = useDebounce(inputValue, 500);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInputValue(e.target.value as "true" | "false");
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (debouncedValue) {
+      console.log(`Debounced MCQ Answer ${question.Id} :`, debouncedValue);
+    }
+  }, [debouncedValue, question.Id]);
   return (
     <div>
       {/* Question Header */}
@@ -35,6 +52,7 @@ export default function MultipleChoiceQuestion({
         <FormController
           name={question.Id}
           type="radio"
+          onChange={handleChange}
           options={question.Answers.map((answer) => ({
             value: answer.Id,
             label: answer.Answer,

@@ -1,6 +1,7 @@
-import { useFormContext } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
 import { WritingQuestion as WritingQuestionType } from "../../../api/services/exams.services";
 import FormController from "./FormController";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 type WritingQuestionProps = {
   question: WritingQuestionType;
@@ -11,6 +12,21 @@ export default function WritingQuestion({
   question,
   index,
 }: WritingQuestionProps) {
+  const [inputValue, setInputValue] = useState("");
+  const debouncedValue = useDebounce(inputValue, 500);
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInputValue(e.target.value);
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (debouncedValue || debouncedValue == "") {
+      console.log(`Debounced Writing Answer ${question.Id} :`, debouncedValue);
+    }
+  }, [debouncedValue, question.Id]);
   return (
     <div>
       {/* Question Header */}
@@ -29,6 +45,7 @@ export default function WritingQuestion({
         name={question.Id}
         type="textarea"
         placeholder="Type your answer here..."
+        onChange={handleChange}
       />
     </div>
   );

@@ -1,10 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { z } from "zod";
 import { useSkillExamQestions } from "../../hooks/useSkillExamQestions";
 import QuestionRenderer from "./QuestionsTypes/QuestionRenderer";
-import { z } from "zod";
-import { generateSchema } from "./QuestionsTypes/ValidationSchema";
+import {
+  generateDefaultValues,
+  generateSchema,
+} from "./QuestionsTypes/ValidationSchema";
 type ReadingExamProps = {
   examId: string | undefined;
   skillNumber: number;
@@ -26,14 +29,11 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
     getValues,
   } = methods;
   const fromValues = watch();
-  // handle frro writing
-  // const searchTerm = watch("82c29821-0189-41b9-862b-f7bca30d096f");
-  // const debouncedSearch = useDebounce(searchTerm, 500);
-  // useEffect(() => {
-  //   if (debouncedSearch) {
-  //     console.log("Fetching results for:", debouncedSearch);
-  //   }
-  // }, [debouncedSearch]);
+
+  const watchedValues = watch();
+  const previousValues = useRef({
+    ...generateDefaultValues(Questions),
+  });
 
   const onSubmit = (data: unknown) => {
     console.log("Form Data:", data);
@@ -41,8 +41,18 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
   useEffect(() => {
     console.log("fromValues", fromValues);
   }, [fromValues]);
-
-  console.log("topicsWithQuestions", { Questions });
+  // const onChangeForm = () => {
+  //   Object.keys(watchedValues).forEach((key) => {
+  //     const field = key as keyof FormValues;
+  //     if (watchedValues[field] !== previousValues.current[field]) {
+  //       console.log(
+  //         `Changed Field: ${field}, New Value: ${watchedValues[field]}`
+  //       );
+  //       previousValues.current[field] = watchedValues[field]; // Update previous value
+  //     }
+  //   });
+  // };
+  // console.log("topicsWithQuestions", { Questions });
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {isError}</div>;
   return (
@@ -90,14 +100,14 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
             </div>
           </div>
         </form>
-        <div
+        {/* <div
           onClick={() => {
             console.log("errrors", errors);
             console.log("values", getValues());
           }}
         >
           debig
-        </div>
+        </div> */}
       </FormProvider>
     </div>
   );

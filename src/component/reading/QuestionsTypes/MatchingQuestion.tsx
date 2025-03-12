@@ -6,12 +6,13 @@ import {
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import {
   MatchingAnswer,
   MatchingQuestionItem,
   MatchingQuestion as MatchingQuestionType,
 } from "../../../api/services/exams.services";
-import { useFormContext } from "react-hook-form";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 interface MatchingQuestionProps {
   question: MatchingQuestionType;
@@ -29,8 +30,9 @@ export default function MatchingQuestion({
     formState: { isSubmitted },
   } = useFormContext();
   const isError = question.MatchingQuestion.some((matchQuestion) => {
-    return getFieldState(matchQuestion?.Id)?.error === null;
+    return getFieldState(matchQuestion?.Id)?.error !== undefined;
   });
+
   const [AnswersOptions, setAnswersOptions] = useState(question.Answers);
   const [MatchedQuestions, setMatchedQuestions] = useState(
     mapQuestions(question.MatchingQuestion)
@@ -39,33 +41,28 @@ export default function MatchingQuestion({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
-    console.log("oveeeer", over, active.id);
-    if (over.id === "TopArea") {
+    if (over.id === "AvailableAnswersArea") {
       let inTopAnswers = AnswersOptions.find((Item) => Item.Id == active.id);
       if (inTopAnswers) return;
       let x = Object.keys(MatchedQuestions).find(
         (key) => MatchedQuestions[key]?.Id === active.id
       );
       let y = MatchedQuestions[x];
-      console.log("xx", x, y, MatchedQuestions, active.id);
       setMatchedQuestions((prev) => {
         prev[x] = null;
         return { ...prev };
       });
       let z = [...AnswersOptions, y];
-      console.log("xx topd", z);
       setAnswersOptions(z);
       return;
     }
-    if (!MatchedQuestions[over.id] && over.id !== "TopArea") {
+    if (!MatchedQuestions[over.id] && over.id !== "AvailableAnswersArea") {
       let mm = null;
-      console.log("fimal  strfzcvzd", over.id, active.id);
-      console.log(
-        "fimal mm",
-        (mm = Object.keys(MatchedQuestions).find(
-          (key) => MatchedQuestions[key]?.Id === active.id
-        ))
+
+      mm = Object.keys(MatchedQuestions).find(
+        (key) => MatchedQuestions[key]?.Id === active.id
       );
+
       setMatchedQuestions((prev) => {
         /* from drop slot to drop slot*/
         if (mm) {
@@ -84,13 +81,11 @@ export default function MatchingQuestion({
     }
     if (MatchedQuestions[over.id]) {
       let mm = null;
-      console.log("fimal strfzcvzd ", MatchedQuestions, over.id, active.id);
-      console.log(
-        "fimal strfzcvzd mm",
-        (mm = Object.keys(MatchedQuestions).find(
-          (key) => MatchedQuestions[key]?.Id === active.id
-        ))
+
+      mm = Object.keys(MatchedQuestions).find(
+        (key) => MatchedQuestions[key]?.Id === active.id
       );
+
       if (mm) {
         setMatchedQuestions((prev) => {
           /* from drop slot to drop slot*/
@@ -102,7 +97,6 @@ export default function MatchingQuestion({
       } else {
         let sourFilm = MatchedQuestions[over.id];
         let tragAnswer = AnswersOptions.find((item) => item.Id === active.id);
-        console.log("fimal strfzcvzd mm ads", tragAnswer, sourFilm);
         let sad = AnswersOptions.filter((item) => item.Id !== tragAnswer.Id);
         setAnswersOptions([...sad, sourFilm]);
         let asds = Object.keys(MatchedQuestions).find(
@@ -117,24 +111,31 @@ export default function MatchingQuestion({
   };
 
   useEffect(() => {
-    console.log("fimaMatchedQuestions", MatchedQuestions);
-  }, [MatchedQuestions]);
-  useEffect(() => {
-    // console.log("arrange question error", { isSubmitted });
     async function updateFormValue() {
       Object.keys(MatchedQuestions).map(async (key) => {
         await setValue(key, MatchedQuestions[key]);
       });
       //to run vaildation for this question after submit and if one answer not answered
-      // const isPlacedAnswerFull = placedAnswers.some((item) => item != null);
-      // if (isPlacedAnswerFull && isSubmitted) {
-      //   trigger(question.Id);
-      // }
+      const isMatchingQuestionFull = Object.keys(MatchedQuestions).some(
+        (key) => {
+          return MatchedQuestions[key] != null;
+        }
+      );
+      if (isMatchingQuestionFull && isSubmitted) {
+        Object.keys(MatchedQuestions).map((key) => {
+          trigger(key);
+        });
+      }
     }
     updateFormValue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [MatchedQuestions]);
 
+  // Debounced MatchedQuestions
+  const debouncedPlacedAnswers = useDebounce(MatchedQuestions, 1000);
+  useEffect(() => {
+    console.log(`Debounced Arrange Answer :`, debouncedPlacedAnswers);
+  }, [debouncedPlacedAnswers]);
   return (
     <div>
       <h2 className="text-lg font-bold flex items-center mb-3">
@@ -143,17 +144,21 @@ export default function MatchingQuestion({
         </span>
         Match the right answers
       </h2>
-      <div className="p-4 border rounded-xl shadow-sm">
+      <div
+        className={`p-4 border  rounded-xl shadow-sm ${
+          isError && "border-red-500"
+        }`}
+      >
         <DndContext onDragEnd={handleDragEnd}>
           {/* Render Available Answers in Top List */}
-          <AnswersOptionsArea answers={AnswersOptions} />
+          <AvailableAnswersArea answers={AnswersOptions} />
 
           {/* Matching Questions as Drop Targets */}
           <ul className="flex flex-col justify-center items-center ">
             {question.MatchingQuestion.map((q) => (
               <li className="w-full flex items-center p-2 border-b last:border-b-0">
-                <p className="text-gray-600 flex-1">{q.ContentQuestion}</p>
-                <QuestionAnswerDropArea
+                <p className="font-medium flex-1">{q.ContentQuestion}</p>
+                <DroppableSlot
                   slotId={q.Id}
                   MatchedQuestions={MatchedQuestions}
                 />
@@ -188,7 +193,7 @@ function AnswerCard({ answer }: { answer: MatchingAnswer }) {
   );
 }
 // Droppable Answer Slot (For Drop Area)
-function QuestionAnswerDropArea({
+function DroppableSlot({
   slotId,
   MatchedQuestions,
 }: {
@@ -197,26 +202,35 @@ function QuestionAnswerDropArea({
 }) {
   const { isOver, setNodeRef } = useDroppable({ id: slotId });
   const matchedAnswer = MatchedQuestions[slotId];
-  console.log("DroppableSlot", slotId, MatchedQuestions);
   return (
     <div
       ref={setNodeRef}
-      className={`border rounded min-w-36 h-10 flex items-center justify-center cursor-pointer ${
-        matchedAnswer && "border-none"
-      } ${isOver ? "bg-purple-400" : ""}`}
+      className=" rounded-lg w-32 h-10 flex items-center justify-center cursor-pointer"
+      // ${
+      //   matchedAnswer && "border-none"
+      // } ${isOver ? "bg-purple-400" : ""}`}
     >
-      {matchedAnswer ? <AnswerCard answer={matchedAnswer} /> : "Drop here"}
+      {matchedAnswer ? (
+        <AnswerCard answer={matchedAnswer} />
+      ) : (
+        <div className="bg-gray-100 rounded flex justify-center items-center w-[90%] h-[95%]">
+          drop here
+        </div>
+      )}
     </div>
   );
 }
-function AnswersOptionsArea({ answers }: { answers: MatchingAnswer[] }) {
+function AvailableAnswersArea({ answers }: { answers: MatchingAnswer[] }) {
   const { setNodeRef } = useDroppable({
-    id: "TopArea",
+    id: "AvailableAnswersArea",
   });
 
   return (
-    <div className="min-w-80 min-h-[4.5rem] py-4 flex justify-center rounded bg-[#EBEBEB]">
-      <div ref={setNodeRef} className="flex justify-center gap-4 h-full w-full">
+    <div className="bg-gray-200 min-w-50 min-h-[4.5rem] py-4 flex flex-wrap justify-center rounded ">
+      <div
+        ref={setNodeRef}
+        className="flex flex-wrap justify-center gap-4 h-full w-full"
+      >
         {answers.length ? (
           answers.map((answers) => {
             return <AnswerCard key={answers.Id} answer={answers} />;

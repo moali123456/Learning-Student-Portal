@@ -9,6 +9,7 @@ interface FormControllerProps {
   }[];
   placeholder?: string;
   className?: string;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 export default function FormController({
@@ -17,6 +18,7 @@ export default function FormController({
   options,
   placeholder,
   className,
+  onChange = () => {},
 }: FormControllerProps) {
   const {
     control,
@@ -35,9 +37,7 @@ export default function FormController({
                 {options.map((option) => (
                   <label
                     key={option.value}
-                    className={
-                      "flex items-center space-x-2 cursor-pointer"
-                    }
+                    className={"flex items-center space-x-2 cursor-pointer"}
                   >
                     <input
                       type="radio"
@@ -45,6 +45,10 @@ export default function FormController({
                       value={option.value}
                       checked={field.value === option.value}
                       className="hidden peer "
+                      onChange={(e) => {
+                        field.onChange(e.target.value); // Update form state
+                        onChange(e); // Call external onChange
+                      }}
                     />
                     <span
                       className={
@@ -70,6 +74,10 @@ export default function FormController({
                   errors[name] && "border-red-600 focus:ring-neutral-50"
                 }`}
                 placeholder={placeholder}
+                onChange={(e) => {
+                  field.onChange(e);
+                  onChange(e);
+                }}
               />
             );
           } else {

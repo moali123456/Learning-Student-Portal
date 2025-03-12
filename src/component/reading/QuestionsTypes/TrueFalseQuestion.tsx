@@ -1,6 +1,8 @@
 import { useFormContext } from "react-hook-form";
 import { TrueFalseQuestion as TrueFalseQuestionType } from "../../../api/services/exams.services";
 import FormController from "./FormController";
+import { useCallback, useEffect, useState } from "react";
+import { useDebounce } from "../../../hooks/useDebounce";
 type TrueFalseQuestionProps = {
   question: TrueFalseQuestionType;
   index: number;
@@ -12,6 +14,23 @@ export default function TrueFalseQuestion({
 }: TrueFalseQuestionProps) {
   const { getFieldState } = useFormContext();
   const isError = getFieldState(question?.Id)?.error;
+  const [inputValue, setInputValue] = useState("");
+  const debouncedValue = useDebounce(inputValue, 500);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInputValue(e.target.value as "");
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (debouncedValue) {
+      console.log(
+        `Debounced TRUE FALSE Answer ${question.Id} :`,
+        debouncedValue
+      );
+    }
+  }, [debouncedValue, question.Id]);
   return (
     <div>
       {/* Question Number & Title */}
@@ -33,6 +52,7 @@ export default function TrueFalseQuestion({
         <FormController
           name={question.Id}
           type="radio"
+          onChange={handleChange}
           options={[
             {
               value: "true",

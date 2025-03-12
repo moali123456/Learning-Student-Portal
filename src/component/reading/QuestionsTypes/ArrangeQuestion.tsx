@@ -8,6 +8,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Answer, DragDropQuestion } from "../../../api/services/exams.services";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 interface ArrangeQuestionProps {
   question: DragDropQuestion;
@@ -98,7 +99,6 @@ export default function ArrangeQuestion({
     }
   };
   useEffect(() => {
-    console.log("arrange question error", { isSubmitted });
     async function updateFormValue() {
       await setValue(question.Id, placedAnswers);
       //to run vaildation for this question after submit and if one answer not answered
@@ -110,7 +110,15 @@ export default function ArrangeQuestion({
     updateFormValue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placedAnswers, question.Id, setValue]);
-
+  
+  // Debounced placedAnswers
+  const debouncedPlacedAnswers = useDebounce(placedAnswers, 1000);
+  useEffect(() => {
+    console.log(
+      `Debounced Arrange Answer ${question.Id} :`,
+      debouncedPlacedAnswers
+    );
+  }, [debouncedPlacedAnswers, question.Id]);
   return (
     <div>
       {/* Question Number & Title */}
@@ -130,7 +138,7 @@ export default function ArrangeQuestion({
           <AvailableAnswersArea answers={availableAnswers} />
 
           {/* Drop Area */}
-          <div className=" flex justify-center  mt-4 p-4 rounded-md">
+          <div className=" flex flex-wrap gap-4 md:gap-0 justify-center  mt-4 p-4 rounded-md">
             {placedAnswers.map((answer, index) => (
               <DroppableSlot
                 key={index}
