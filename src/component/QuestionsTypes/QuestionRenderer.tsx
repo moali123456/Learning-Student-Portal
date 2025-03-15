@@ -1,41 +1,68 @@
 import {
   MatchingQuestion as MatchingQuestionType,
-  Question,
+  Question
 } from "../../api/services/exams.services";
+import { QuestionAnswer } from "../reading/ReadingExam";
 import ArrangeQuestion from "./ArrangeQuestion";
 import CompleteQuestion from "./CompleteQuestion";
 import MatchingQuestion from "./MatchingQuestion";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import TrueFalseQuestion from "./TrueFalseQuestion";
 import WritingQuestion from "./WritingQuestion";
+
 type QuestionRendererProps = {
   question: Question | MatchingQuestionType;
-
+  SubmitQuestionAnswer: (QuestionAnswer: QuestionAnswer) => void;
   index: number;
 };
 export default function QuestionRenderer({
   question,
+  SubmitQuestionAnswer,
   index,
 }: QuestionRendererProps) {
   return (
     <div>
       {question?.QuestionType === 1 && (
-        <MultipleChoiceQuestion question={question} index={index} />
+        <MultipleChoiceQuestion
+          SubmitQuestionAnswer={SubmitQuestionAnswer}
+          question={question}
+          index={index}
+        />
       )}
       {question?.QuestionType === 2 && (
-        <WritingQuestion question={question} index={index} />
+        <WritingQuestion
+          SubmitQuestionAnswer={SubmitQuestionAnswer}
+          question={question}
+          index={index}
+        />
       )}
       {question?.QuestionType === 3 && (
-        <MatchingQuestion question={question} index={index} />
+        <MatchingQuestion
+          SubmitQuestionAnswer={SubmitQuestionAnswer}
+          question={question}
+          index={index}
+        />
       )}
       {question?.QuestionType === 4 && (
-        <ArrangeQuestion question={question} index={index} />
+        <ArrangeQuestion
+          SubmitQuestionAnswer={SubmitQuestionAnswer}
+          question={question}
+          index={index}
+        />
       )}
       {question?.QuestionType === 5 && (
-        <CompleteQuestion question={question} index={index} />
+        <CompleteQuestion
+          SubmitQuestionAnswer={SubmitQuestionAnswer}
+          question={question}
+          index={index}
+        />
       )}
       {question?.QuestionType === 6 && (
-        <TrueFalseQuestion question={question} index={index} />
+        <TrueFalseQuestion
+          SubmitQuestionAnswer={SubmitQuestionAnswer}
+          question={question}
+          index={index}
+        />
       )}
     </div>
   );

@@ -3,14 +3,17 @@ import { MCQQuestion } from "../../api/services/exams.services";
 import FormController from "../FormController/FormController";
 import { useCallback, useEffect, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
+import { QuestionAnswer } from "../reading/ReadingExam";
 
 type MultipleChoiceQuestionProps = {
   question: MCQQuestion;
+  SubmitQuestionAnswer: (QuestionAnswer: QuestionAnswer) => void;
   index: number;
 };
 
 export default function MultipleChoiceQuestion({
   question,
+  SubmitQuestionAnswer,
   index,
 }: MultipleChoiceQuestionProps) {
   const { getFieldState } = useFormContext();
@@ -27,9 +30,13 @@ export default function MultipleChoiceQuestion({
 
   useEffect(() => {
     if (debouncedValue) {
-      console.log(`Debounced MCQ Answer ${question.Id} :`, debouncedValue);
+      SubmitQuestionAnswer({
+        QuestionType: 1,
+        questionId: question.Id,
+        answer: debouncedValue,
+      });
     }
-  }, [debouncedValue, question.Id]);
+  }, [debouncedValue, question.Id, SubmitQuestionAnswer]);
   return (
     <div>
       {/* Question Header */}

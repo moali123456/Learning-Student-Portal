@@ -9,14 +9,17 @@ import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Answer, DragDropQuestion } from "../../api/services/exams.services";
 import { useDebounce } from "../../hooks/useDebounce";
+import { QuestionAnswer } from "../reading/ReadingExam";
 
 interface ArrangeQuestionProps {
   question: DragDropQuestion;
+  SubmitQuestionAnswer: (QuestionAnswer: QuestionAnswer) => void;
   index: number;
 }
 
 export default function ArrangeQuestion({
   question,
+  SubmitQuestionAnswer,
   index,
 }: ArrangeQuestionProps) {
   const {
@@ -27,27 +30,29 @@ export default function ArrangeQuestion({
   } = useFormContext();
   const isError = getFieldState(question?.Id)?.error;
   const [availableAnswers, setAvailableAnswers] = useState(question.Answers);
-  const [placedAnswers, setPlacedAnswers] = useState<(Answer | null)[]>(
-    new Array(question.Answers.length).fill(null)
-  );
+  // null -> user try to change 
+  // undefined -> user not have any change
+  const [placedAnswers, setPlacedAnswers] = useState<
+    (Answer | null | undefined)[]
+  >(new Array(question.Answers.length).fill(undefined));
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
     const draggedAnswer: Answer | undefined | null =
       availableAnswers.find((ans) => ans.Id === active.id) ||
-      placedAnswers.find((ans) => ans?.Id === active.id);
+      placedAnswers?.find((ans) => ans?.Id === active.id);
     const dropIndexSe3a =
       over.id === "AvailableAnswersArea"
         ? -1
         : parseInt(String(over.id).replace("slot-", ""), 10);
-    const placedAnswerIndex = placedAnswers.findIndex(
+    const placedAnswerIndex = placedAnswers?.findIndex(
       (item) => item?.Id === active.id
     );
 
     //drag from slots to AvailableAnswersArea
     if (dropIndexSe3a === -1) {
-      const answer = placedAnswers.findIndex((item) => item?.Id === active.id);
+      const answer = placedAnswers?.findIndex((item) => item?.Id === active.id);
       if (answer > -1 && draggedAnswer) {
         setPlacedAnswers((prev) =>
           prev.map((ans) => (ans?.Id === active.id ? null : ans))
@@ -102,7 +107,7 @@ export default function ArrangeQuestion({
     async function updateFormValue() {
       await setValue(question.Id, placedAnswers);
       //to run vaildation for this question after submit and if one answer not answered
-      const isPlacedAnswerFull = placedAnswers.some((item) => item != null);
+      const isPlacedAnswerFull = placedAnswers?.some((item) => item != null);
       if (isPlacedAnswerFull && isSubmitted) {
         trigger(question.Id);
       }
@@ -110,15 +115,21 @@ export default function ArrangeQuestion({
     updateFormValue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placedAnswers, question.Id, setValue]);
-  
+
   // Debounced placedAnswers
   const debouncedPlacedAnswers = useDebounce(placedAnswers, 1000);
   useEffect(() => {
-    console.log(
-      `Debounced Arrange Answer ${question.Id} :`,
-      debouncedPlacedAnswers
-    );
-  }, [debouncedPlacedAnswers, question.Id]);
+    // to check if question touched (use try to answer it) or not,
+    // to reject submit answer for case user not have any change
+    const isDirty = debouncedPlacedAnswers.every((item) => item == undefined);
+    if (debouncedPlacedAnswers && !isDirty) {
+      SubmitQuestionAnswer({
+        QuestionType: 4,
+        questionId: question.Id,
+        answer: debouncedPlacedAnswers,
+      });
+    }
+  }, [debouncedPlacedAnswers, question.Id, SubmitQuestionAnswer]);
   return (
     <div>
       {/* Question Number & Title */}
@@ -139,7 +150,7 @@ export default function ArrangeQuestion({
 
           {/* Drop Area */}
           <div className=" flex flex-wrap gap-4 md:gap-0 justify-center  mt-4 p-4 rounded-md">
-            {placedAnswers.map((answer, index) => (
+            {placedAnswers?.map((answer, index) => (
               <DroppableSlot
                 key={index}
                 slotId={`slot-${index}`}
@@ -227,7 +238,7 @@ function AvailableAnswersArea({ answers }: { answers: Answer[] }) {
 
 // const handleDragEnd = (event: DragEndEvent) => {
 //   const { active, over } = event;
-//   const placedAnswerIndex = placedAnswers.findIndex((item) => {
+//   const placedAnswerIndex = placedAnswers?.findIndex((item) => {
 //     return item?.Id === active.id;
 //   });
 
@@ -279,7 +290,7 @@ function AvailableAnswersArea({ answers }: { answers: Answer[] }) {
 //   //drag from slots to AvailableAnswersArea
 //   if (over.id === "AvailableAnswersArea") {
 //     const answerCardID = active.id;
-//     const answerIndex = placedAnswers.findIndex(
+//     const answerIndex = placedAnswers?.findIndex(
 //       (item) => item?.Id === answerCardID
 //     );
 //     const answer = placedAnswers[answerIndex];

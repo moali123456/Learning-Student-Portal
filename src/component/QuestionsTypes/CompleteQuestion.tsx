@@ -12,14 +12,17 @@ import {
   CompleteQuestion as CompleteQuestionType,
 } from "../../api/services/exams.services";
 import { useDebounce } from "../../hooks/useDebounce";
+import { QuestionAnswer } from "../reading/ReadingExam";
 
 interface CompleteQuestionProps {
   question: CompleteQuestionType;
+  SubmitQuestionAnswer: (QuestionAnswer: QuestionAnswer) => void;
   index: number;
 }
 
 export default function CompleteQuestion({
   question,
+  SubmitQuestionAnswer,
   index,
 }: CompleteQuestionProps) {
   const {
@@ -31,26 +34,29 @@ export default function CompleteQuestion({
   const isError = getFieldState(question?.Id)?.error;
   const [contentSections] = useState(question.ContentQuestion.split("...."));
   const [availableAnswers, setAvailableAnswers] = useState(question.Answers);
-  const [placedAnswers, setPlacedAnswers] = useState<(Answer | null)[]>(
-    new Array(question.Answers.length).fill(null)
-  );
+  // null -> user try to change
+  // undefined -> user not have any change
+  const [placedAnswers, setPlacedAnswers] = useState<
+    (Answer | null | undefined)[]
+  >(new Array(question.Answers.length).fill(undefined));
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
     const draggedAnswer: Answer | undefined | null =
       availableAnswers.find((ans) => ans.Id === active.id) ||
-      placedAnswers.find((ans) => ans?.Id === active.id);
+      placedAnswers?.find((ans) => ans?.Id === active.id);
     const dropIndexSe3a =
       over.id === "AvailableAnswersArea"
         ? -1
         : parseInt(String(over.id).replace("slot-", ""), 10);
-    const placedAnswerIndex = placedAnswers.findIndex(
+    const placedAnswerIndex = placedAnswers?.findIndex(
       (item) => item?.Id === active.id
     );
 
     //drag from slots to AvailableAnswersArea
     if (dropIndexSe3a === -1) {
-      const answer = placedAnswers.findIndex((item) => item?.Id === active.id);
+      const answer = placedAnswers?.findIndex((item) => item?.Id === active.id);
       if (answer > -1 && draggedAnswer) {
         setPlacedAnswers((prev) =>
           prev.map((ans) => (ans?.Id === active.id ? null : ans))
@@ -106,7 +112,7 @@ export default function CompleteQuestion({
     async function updateFormValue() {
       await setValue(question.Id, placedAnswers);
       //to run vaildation for this question after submit and if one answer not answered
-      const isPlacedAnswerFull = placedAnswers.some((item) => item != null);
+      const isPlacedAnswerFull = placedAnswers?.some((item) => item != null);
       if (isPlacedAnswerFull && isSubmitted) {
         trigger(question.Id);
       }
@@ -118,11 +124,17 @@ export default function CompleteQuestion({
   // Debounced placedAnswers
   const debouncedPlacedAnswers = useDebounce(placedAnswers, 1000);
   useEffect(() => {
-    console.log(
-      `Debounced complete Answer ${question.Id} :`,
-      debouncedPlacedAnswers
-    );
-  }, [debouncedPlacedAnswers, question.Id]);
+    // to check if question touched (use try to answer it) or not,
+    // to reject submit answer for case user not have any change
+    const isDirty = debouncedPlacedAnswers.every((item) => item == undefined);
+    if (debouncedPlacedAnswers && !isDirty) {
+      SubmitQuestionAnswer({
+        QuestionType: 5,
+        questionId: question.Id,
+        answer: debouncedPlacedAnswers,
+      });
+    }
+  }, [debouncedPlacedAnswers, question.Id, SubmitQuestionAnswer]);
   return (
     <div>
       {/* Question Number & Title */}
@@ -144,9 +156,9 @@ export default function CompleteQuestion({
           {/* Drop Area */}
           <div className="flex flex-wrap justify-center items-center  mt-4 p-4 rounded-md">
             {contentSections.map((answer, index) => (
-              <>
+              <div key={index} className="flex items-center my-1">
                 <span>{answer}</span>
-                {placedAnswers.length > index ? (
+                {placedAnswers?.length > index ? (
                   <DroppableSlot
                     key={index}
                     slotId={`slot-${index}`}
@@ -156,7 +168,7 @@ export default function CompleteQuestion({
                 ) : (
                   ""
                 )}
-              </>
+              </div>
             ))}
           </div>
         </DndContext>

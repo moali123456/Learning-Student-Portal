@@ -2,17 +2,20 @@ import { useCallback, useEffect, useState } from "react";
 import { WritingQuestion as WritingQuestionType } from "../../api/services/exams.services";
 import FormController from "../FormController/FormController";
 import { useDebounce } from "../../hooks/useDebounce";
+import { QuestionAnswer } from "../reading/ReadingExam";
 
 type WritingQuestionProps = {
   question: WritingQuestionType;
+  SubmitQuestionAnswer: (QuestionAnswer: QuestionAnswer) => void;
   index: number;
 };
 
 export default function WritingQuestion({
   question,
+  SubmitQuestionAnswer,
   index,
 }: WritingQuestionProps) {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string | null>(null);
   const debouncedValue = useDebounce(inputValue, 500);
 
   const handleChange = useCallback(
@@ -24,9 +27,13 @@ export default function WritingQuestion({
 
   useEffect(() => {
     if (debouncedValue || debouncedValue == "") {
-      console.log(`Debounced Writing Answer ${question.Id} :`, debouncedValue);
+      SubmitQuestionAnswer({
+        QuestionType: 2,
+        questionId: question.Id,
+        answer: debouncedValue,
+      });
     }
-  }, [debouncedValue, question.Id]);
+  }, [debouncedValue, question.Id, SubmitQuestionAnswer]);
   return (
     <div>
       {/* Question Header */}

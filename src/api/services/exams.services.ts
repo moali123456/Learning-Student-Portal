@@ -24,7 +24,7 @@ interface BaseQuestion {
   Answers: Answer[];
 }
 
-enum QuestionType {
+export enum QuestionType {
   MCQ = 1,
   Writing = 2,
   Matching = 3,
@@ -118,12 +118,12 @@ export const fetchSkillExamData = async (
   id: number | string
 ) => {
   try {
-    const response = await axios.get<ExamApiResponse>(
-      `http://localhost:4111/StudentExamData`
-    );
-    // const response = await apiInstance.get<ExamApiResponse>(
-    //   `/Student/GetStudentModelExam?Skill=${skillNumber}&ExamId=${id}`
+    // const response = await axios.get<ExamApiResponse>(
+    //   `http://localhost:4111/StudentExamData`
     // );
+    const response = await apiInstance.get<ExamApiResponse>(
+      `/Student/GetStudentModelExam?Skill=${skillNumber}&ExamId=${id}`
+    );
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -141,12 +141,12 @@ export const fetchSkillExamQuestions = async (
   topicId: number | string
 ) => {
   try {
-    const response = await axios.get<QuestionResponse>(
-      `http://localhost:4111/getQuestionsByTopic/${topicId}`
-    );
-    // const response = await apiInstance.get<QuestionResponse>(
-    //   `/Student/GetStudentTopicsQuestions?Skill=${skillNumber}&topicId=${topicId}`
+    // const response = await axios.get<QuestionResponse>(
+    //   `http://localhost:4111/getQuestionsByTopic/${topicId}`
     // );
+    const response = await apiInstance.get<QuestionResponse>(
+      `/Student/GetStudentTopicsQuestions?Skill=${skillNumber}&topicId=${topicId}`
+    );
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -156,5 +156,48 @@ export const fetchSkillExamQuestions = async (
       );
     }
     throw new Error("An unknown error occurred while fetching questions");
+  }
+};
+
+interface BasePayload {
+  Skill: number;
+  ExamId: string;
+  QuestionId: string;
+}
+
+export interface Type1And6Payload extends BasePayload {
+  AnswerId: string;
+}
+
+export interface Type2Payload extends Type1And6Payload {
+  FreeWritingAnswer: string;
+  AnswerFile: string;
+}
+
+export interface Type4And5Payload extends BasePayload {
+  CorrectAnswerOrder: { AnswerId: string; Order: number }[];
+}
+
+export const submitQuestionAnswer = async (
+  payload: Type1And6Payload | Type2Payload | Type4And5Payload
+) => {
+  try {
+    // const response = await axios.post(
+    //   `http://localhost:4111/Student/SubmitStudentAnswer`,
+    //   payload
+    // );
+    const response = await apiInstance.post(
+      `/Student/SubmitStudentAnswer`,
+      payload
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw (
+        error.response?.data ||
+        new Error(`Failed to submit answer to SubmitStudentAnswer`)
+      );
+    }
+    throw new Error("An unknown error occurred while submitting the answer");
   }
 };

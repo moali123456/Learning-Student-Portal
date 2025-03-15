@@ -13,14 +13,17 @@ import {
   MatchingQuestion as MatchingQuestionType,
 } from "../../api/services/exams.services";
 import { useDebounce } from "../../hooks/useDebounce";
+import { QuestionAnswer } from "../reading/ReadingExam";
 
 interface MatchingQuestionProps {
   question: MatchingQuestionType;
+  SubmitQuestionAnswer: (QuestionAnswer: QuestionAnswer) => void;
   index: number;
 }
 
 export default function MatchingQuestion({
   question,
+  SubmitQuestionAnswer,
   index,
 }: MatchingQuestionProps) {
   const {
@@ -134,8 +137,20 @@ export default function MatchingQuestion({
   // Debounced MatchedQuestions
   const debouncedPlacedAnswers = useDebounce(MatchedQuestions, 1000);
   useEffect(() => {
-    console.log(`Debounced Arrange Answer :`, debouncedPlacedAnswers);
-  }, [debouncedPlacedAnswers]);
+    // to check if question touched (use try to answer it) or not,
+    // to reject submit answer for case user not have any change
+    // const isDirty = debouncedPlacedAnswers.every((item) => item == undefined);
+    const isDirty = Object.values(debouncedPlacedAnswers).every(
+      (values) => values === undefined
+    );
+    if (debouncedPlacedAnswers && !isDirty) {
+      SubmitQuestionAnswer({
+        QuestionType: 3,
+        questionId: "matching",
+        answer: debouncedPlacedAnswers,
+      });
+    }
+  }, [debouncedPlacedAnswers, SubmitQuestionAnswer]);
   return (
     <div>
       <h2 className="text-lg font-bold flex items-center mb-3">
@@ -156,7 +171,10 @@ export default function MatchingQuestion({
           {/* Matching Questions as Drop Targets */}
           <ul className="flex flex-col justify-center items-center ">
             {question.MatchingQuestion.map((q) => (
-              <li className="w-full flex items-center p-2 border-b last:border-b-0">
+              <li
+                key={q.Id}
+                className="w-full flex items-center p-2 border-b last:border-b-0"
+              >
                 <p className="font-medium flex-1">{q.ContentQuestion}</p>
                 <DroppableSlot
                   slotId={q.Id}
@@ -200,7 +218,7 @@ function DroppableSlot({
   slotId: string;
   MatchedQuestions: MappedQuestions;
 }) {
-  const { isOver, setNodeRef } = useDroppable({ id: slotId });
+  const { setNodeRef } = useDroppable({ id: slotId });
   const matchedAnswer = MatchedQuestions[slotId];
   return (
     <div
@@ -242,10 +260,10 @@ function AvailableAnswersArea({ answers }: { answers: MatchingAnswer[] }) {
     </div>
   );
 }
-type MappedQuestions = Record<string, null>;
+type MappedQuestions = Record<string, undefined>;
 function mapQuestions(questions: MatchingQuestionItem[]): MappedQuestions {
   return questions.reduce((acc, question) => {
-    acc[question.Id] = null;
+    acc[question.Id] = undefined;
     return acc;
   }, {} as MappedQuestions);
 }

@@ -1,10 +1,25 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
+import {
+  Answer,
+  Type1And6Payload,
+  Type2Payload,
+  Type4And5Payload,
+} from "../../api/services/exams.services";
 import { useSkillExamQestions } from "../../hooks/useSkillExamQestions";
+import { useSubmitQuestionAnswer } from "../../hooks/useSubmitQuestionAnswer";
 import QuestionRenderer from "../QuestionsTypes/QuestionRenderer";
 import { generateSchema } from "./ValidationSchema";
+export type QuestionAnswer = {
+  QuestionType: 1 | 2 | 3 | 4 | 5 | 6;
+  questionId: string;
+  answer:
+    | string
+    | (Answer | null)[]
+    | Record<string, { Id: string; Answer: string }>
+    | boolean;
+};
 type ReadingExamProps = {
   examId: string | undefined;
   skillNumber: number;
@@ -12,6 +27,7 @@ type ReadingExamProps = {
 export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
   const { topicsWithQuestions, Questions, isLoading, isError } =
     useSkillExamQestions(skillNumber!, examId!);
+  const { submitAnswer } = useSubmitQuestionAnswer();
 
   const examSchema = z.object({
     ...generateSchema(Questions),
@@ -19,20 +35,17 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
   const methods = useForm({
     resolver: zodResolver(examSchema),
   });
-  const {
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = methods;
-  const fromValues = watch();
+  const { handleSubmit } = methods;
 
+  const SubmitQuestionAnswer = (QuestionAnswer: QuestionAnswer) => {
+    if (examId && QuestionAnswer) {
+      const payload = transformAnswer(QuestionAnswer, 1, examId);
+      submitAnswer(payload);
+    }
+  };
   const onSubmit = (data: unknown) => {
     console.log("Form Data:", data);
   };
-  useEffect(() => {
-    console.log("fromValues", fromValues);
-  }, [fromValues]);
-
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {isError}</div>;
   return (
@@ -63,6 +76,7 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
                       <div key={indexQues} className="mb-10">
                         <QuestionRenderer
                           question={question}
+                          SubmitQuestionAnswer={SubmitQuestionAnswer}
                           index={indexQues}
                         />
                       </div>
@@ -80,14 +94,6 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
             </div>
           </div>
         </form>
-        {/* <div
-          onClick={() => {
-            console.log("errrors", errors);
-            console.log("values", getValues());
-          }}
-        >
-          debig
-        </div> */}
       </FormProvider>
     </div>
   );
@@ -140,4 +146,56 @@ function ExamHeader() {
       </div>
     </>
   );
+}
+
+function transformAnswer(
+  input: QuestionAnswer,
+  skill: number,
+  examId: string
+): Type1And6Payload | Type2Payload | Type4And5Payload {
+  switch (input.QuestionType) {
+    case 1:
+    case 6:
+      return {
+        Skill: skill,
+        ExamId: examId,
+        QuestionId: input.questionId,
+        AnswerId: input.answer as string,
+      };
+
+    case 2:
+      return {
+        Skill: skill,
+        ExamId: examId,
+        QuestionId: input.questionId,
+        AnswerId: "string", // You may replace it with actual AnswerId if needed
+        FreeWritingAnswer: input.answer as string,
+        AnswerFile: "string", // Replace with actual file data if available
+      };
+
+    case 3:
+      return Object.entries(input.answer as Record<string, { Id: string }>).map(
+        ([questionId, answerData]) => ({
+          Skill: skill,
+          ExamId: examId,
+          QuestionId: questionId,
+          AnswerId: answerData?.Id,
+        })
+      );
+
+    case 4:
+    case 5:
+      return {
+        Skill: skill,
+        ExamId: examId,
+        QuestionId: input.questionId,
+        CorrectAnswerOrder: (input.answer as Answer[]).map((ans, index) => ({
+          AnswerId: ans?.Id,
+          Order: index,
+        })),
+      };
+
+    default:
+      throw new Error("Invalid QuestionType");
+  }
 }

@@ -3,18 +3,22 @@ import { TrueFalseQuestion as TrueFalseQuestionType } from "../../api/services/e
 import FormController from "../FormController/FormController";
 import { useCallback, useEffect, useState } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
+import { QuestionAnswer } from "../reading/ReadingExam";
 type TrueFalseQuestionProps = {
   question: TrueFalseQuestionType;
+  SubmitQuestionAnswer: (QuestionAnswer: QuestionAnswer) => void;
+
   index: number;
 };
 
 export default function TrueFalseQuestion({
   question,
+  SubmitQuestionAnswer,
   index,
 }: TrueFalseQuestionProps) {
   const { getFieldState } = useFormContext();
   const isError = getFieldState(question?.Id)?.error;
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string | null>(null);
   const debouncedValue = useDebounce(inputValue, 500);
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -25,12 +29,13 @@ export default function TrueFalseQuestion({
 
   useEffect(() => {
     if (debouncedValue) {
-      console.log(
-        `Debounced TRUE FALSE Answer ${question.Id} :`,
-        debouncedValue
-      );
+      SubmitQuestionAnswer({
+        QuestionType: 6,
+        questionId: question.Id,
+        answer: debouncedValue,
+      });
     }
-  }, [debouncedValue, question.Id]);
+  }, [debouncedValue, question.Id, SubmitQuestionAnswer]);
   return (
     <div>
       {/* Question Number & Title */}
