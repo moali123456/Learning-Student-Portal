@@ -10,8 +10,12 @@ import {
 import { useGetSkillExamTopicsWithQuestionsQuery } from "../../api/studentApi";
 import { useSubmitQuestionAnswer } from "../../hooks/useSubmitQuestionAnswer";
 import QuestionRenderer from "../QuestionsTypes/QuestionRenderer";
-import { generateSchema } from "../Exam/ValidationSchema";
+
 import Loader from "../Loader/Loader";
+import ExamHeader from "./ExamHeader";
+import { generateSchema } from "./ValidationSchema";
+import { FaKeyboard, FaPen } from "react-icons/fa";
+import Images from "../../assets/images/Images";
 export type QuestionAnswer = {
   QuestionType: 1 | 2 | 3 | 4 | 5 | 6;
   questionId: string;
@@ -21,11 +25,11 @@ export type QuestionAnswer = {
     | Record<string, { Id: string; Answer: string }>
     | boolean;
 };
-type ReadingExamProps = {
+type ExamProps = {
   examId: string | undefined;
   skillNumber: number;
 };
-export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
+export default function Exam({ examId, skillNumber }: ExamProps) {
   const {
     data: topicsWithQuestions = [],
     error: isError,
@@ -55,7 +59,17 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
   if (isError) return <div>Error....</div>;
   return (
     <div className="questions-wrapper">
-      <ExamHeader />
+      <ExamHeader
+        title="الكتابة"
+        questionsCount={15}
+        instructions="يجب الإجابة على جميع الأسئلة"
+        duration="40 دقيقة"
+        image={Images.login_banner}
+        options={[
+          { label: "Write with Keyboard", icon: <FaKeyboard /> },
+          { label: "Hand writing", icon: <FaPen /> },
+        ]}
+      />
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-10">
           {topicsWithQuestions.map(({ topic, questions }, index) => {
@@ -101,55 +115,6 @@ export default function ReadingExam({ examId, skillNumber }: ReadingExamProps) {
         </form>
       </FormProvider>
     </div>
-  );
-}
-
-function ExamHeader() {
-  return (
-    <>
-      <div className="reading-instructions">
-        <div className="left-side">
-          <img src="/assets/home/highlight.svg" alt="" />
-          <div className="main-points">
-            <p className="title">Reading</p>
-            <ul className="points">
-              <li>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
-              </li>
-              <li>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
-              </li>
-              <li>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry.
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="right-side-img">
-          <div className="whole-img">
-            <div className="img-bg">
-              <img src="/assets/home/reading-a-book.svg" alt="" />
-            </div>
-          </div>
-          <div className="extra-writing-instruction">
-            <div className="instruction-item">
-              <img src="/assets/exams/keyboard.svg" alt="" />
-              <p className="keyboard">Write with Keyboard</p>
-            </div>
-            <div className="instruction-item">
-              <img src="/assets/exams/write.svg" alt="" />
-              <p>Hand writing</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="reading-timer">
-        <img src="/assets/home/timer.svg" alt="" />
-      </div>
-    </>
   );
 }
 

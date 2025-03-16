@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as z from "zod";
-import { adminSchoolLogin, studentLogin } from "../api/adminApis";
-import { useNavigate, useLocation } from "react-router-dom";
+import {
+  useAdminSchoolLoginMutation,
+  useStudentLoginMutation,
+} from "../api/authApi";
 import Footer from "../layout/footer";
 import Header from "../layout/header";
 
@@ -15,7 +18,7 @@ const loginSchema = z.object({
 
 type LoginFormInputs = z.infer<typeof loginSchema>;
 
-const StudentLogin: React.FC = () => {
+export default function Login() {
   const {
     register,
     handleSubmit,
@@ -30,25 +33,28 @@ const StudentLogin: React.FC = () => {
 
   // Extract role from URL query parameters
   const queryParams = new URLSearchParams(location.search);
-  const role = queryParams.get("role") || "student"; // Default to "student" if role is not specified
+  const role = queryParams.get("role")?.toLowerCase() || "student"; // Default to "student"
+
+  // RTK Query Mutations
+  const [loginStudent, { isLoading: isLoadingStudent }] =
+    useStudentLoginMutation();
+  const [loginAdmin, { isLoading: isLoadingAdmin }] =
+    useAdminSchoolLoginMutation();
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
-      const response =
-        role === "Student"
-          ? await studentLogin(data.username, data.password)
-          : await adminSchoolLogin(data.username, data.password);
-      console.log("Login successful:", response);
-      if (role === "Student") {
+      let response;
+      if (role === "student") {
+        response = await loginStudent(data).unwrap();
         navigate("/student/assessments");
       } else {
+        response = await loginAdmin(data).unwrap();
         navigate("/dashboard/students-files");
       }
+      console.log("Login successful:", response);
     } catch (error: any) {
       console.error("Login failed:", error);
-      setLoginError(
-        error.response?.data?.message || "Login failed. Please try again."
-      );
+      setLoginError(error.data?.message || "Login failed. Please try again.");
     }
   };
 
@@ -64,24 +70,18 @@ const StudentLogin: React.FC = () => {
               <a href="/about">About</a>
             </li>
             <li>
-              <a href="/about">Contact Us</a>
+              <a href="/contact">Contact Us</a>
             </li>
           </ul>
         }
         rightChildren={
-          <div
-            className="
-        flex
-        gap-4
-        "
-          >
+          <div className="flex gap-4">
             <button
               className="login-btn"
               onClick={() => navigate("/pre-login")}
             >
               Login
             </button>
-
             <div className="header-circle"></div>
           </div>
         }
@@ -143,9 +143,10 @@ const StudentLogin: React.FC = () => {
             </div>
             <button
               type="submit"
+              disabled={isLoadingStudent || isLoadingAdmin}
               className="w-full h-[57px] text-[14px] font-bold bg-[#9A7ED9] text-white rounded-lg hover:bg-purple-700 transition duration-200"
             >
-              Login
+              {isLoadingStudent || isLoadingAdmin ? "Logging in..." : "Login"}
             </button>
           </form>
         </div>
@@ -153,6 +154,4 @@ const StudentLogin: React.FC = () => {
       <Footer />
     </div>
   );
-};
-
-export default StudentLogin;
+}

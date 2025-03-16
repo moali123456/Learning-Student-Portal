@@ -5,7 +5,7 @@ import {
   useDroppable,
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   MatchingAnswer,
@@ -35,7 +35,7 @@ export default function MatchingQuestion({
   const isError = question.MatchingQuestion.some((matchQuestion) => {
     return getFieldState(matchQuestion?.Id)?.error !== undefined;
   });
-
+  const x = useRef();
   const [AnswersOptions, setAnswersOptions] = useState(question.Answers);
   const [MatchedQuestions, setMatchedQuestions] = useState(
     mapQuestions(question.MatchingQuestion)
@@ -144,10 +144,15 @@ export default function MatchingQuestion({
       (values) => values === undefined
     );
     if (debouncedPlacedAnswers && !isDirty) {
-      SubmitQuestionAnswer({
-        QuestionType: 3,
-        questionId: "matching",
-        answer: debouncedPlacedAnswers,
+      Object.keys(debouncedPlacedAnswers).map((QuestionID) => {
+        const answer = debouncedPlacedAnswers[QuestionID];
+        if (answer !== undefined) {
+          SubmitQuestionAnswer({
+            QuestionType: 3,
+            questionId: QuestionID,
+            answer: answer ? answer.Id : null,
+          });
+        }
       });
     }
   }, [debouncedPlacedAnswers, SubmitQuestionAnswer]);
@@ -260,7 +265,7 @@ function AvailableAnswersArea({ answers }: { answers: MatchingAnswer[] }) {
     </div>
   );
 }
-type MappedQuestions = Record<string, undefined>;
+type MappedQuestions = Record<string, undefined | MatchingAnswer>;
 function mapQuestions(questions: MatchingQuestionItem[]): MappedQuestions {
   return questions.reduce((acc, question) => {
     acc[question.Id] = undefined;

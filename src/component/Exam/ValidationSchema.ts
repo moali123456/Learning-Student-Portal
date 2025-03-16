@@ -1,8 +1,6 @@
 import { z } from "zod";
-import {
-  MatchingQuestion,
-  Question,
-} from "../../api/services/exams.services";
+import { MatchingQuestion, Question } from "../../api/services/exams.services";
+import { TopicWithQuestions } from "../../types/ExamQuestions";
 const Answer = z.object({
   Id: z.string().uuid(),
   QuestionId: z.string().uuid(),
@@ -12,12 +10,11 @@ const MatchingAnswer = z.object({
   Id: z.string().uuid(),
   Answer: z.string().min(1),
 });
-export const generateSchema = (
-  questions: (Question | MatchingQuestion)[] | null
-) => {
+export const generateSchema = (Questions: TopicWithQuestions[]) => {
   const schemaObject: Record<string, z.ZodTypeAny> = {};
+  const modifiedQuestions = Questions?.flatMap((item) => item.questions);
 
-  questions?.map((question) => {
+  modifiedQuestions?.map((question) => {
     if ("Id" in question) {
       switch (question.QuestionType) {
         case 1: // MCQ Question

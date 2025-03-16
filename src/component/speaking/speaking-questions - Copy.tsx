@@ -354,7 +354,7 @@ import Header from "../../layout/header";
 import { useParams } from "react-router-dom";
 import { getAllQuestionsReading, submitExamData } from "../../api/adminApis";
 import { FiTrash2 } from "react-icons/fi";
-import ExamTimer from "../shared/exam-timer/exam-timer";
+import ExamTimer from "../shared/exam-timer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { toast } from "react-toastify";

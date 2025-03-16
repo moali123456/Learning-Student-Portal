@@ -4,7 +4,7 @@ import "./styles.scss";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="footer-wrapper">
+    <footer className="footer-wrapper mt-auto">
       {/* Left Section - Links */}
       <div>
         <div className="footer-links">
