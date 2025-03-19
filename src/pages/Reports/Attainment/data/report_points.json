@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Overall data",
+    "description": "for the selected Grade/Grades Showing the progress and the attainment from the starting point including below, inline and above the curriculum expectations.",
+    "icon": "📊"
+  },
+  {
+    "title": "Skills analysis",
+    "description": "to Showing the progress and the attainment for the four skills from the starting point for Reading, Listening, Writing and Speaking.",
+    "icon": "👥"
+  },
+  {
+    "title": "Gender analysis",
+    "description": "for Boys and Girls Showing the progress and the attainment from the starting point including below, inline and above the curriculum expectations.",
+    "icon": "🚻"
+  },
+  {
+    "title": "Students of determination",
+    "description": "to the progress and the attainment from the starting point including below, inline and showing above the curriculum expectations.",
+    "icon": "🧑‍🏫"
+  },
+  {
+    "title": "Local Students",
+    "description": "to showing the progress and the attainment from the starting point including below, inline and above the curriculum expectations for Emirati, Qatari, Bahraini, Saudi, Kuwaiti, Egyptian, Omani or globally.",
+    "icon": "🌍"
+  }
+]

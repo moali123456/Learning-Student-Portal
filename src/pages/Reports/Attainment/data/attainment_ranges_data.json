@@ -1,0 +1,54 @@
+{
+  "grades": [
+    {
+      "grade": "Grade 1-5",
+      "below": "0-49",
+      "inline": "50-69",
+      "above": "70-100"
+    },
+    {
+      "grade": "Grade 6-9",
+      "below": "0-49",
+      "inline": "50-69",
+      "above": "70-100"
+    },
+    {
+      "grade": "Grade 10-12",
+      "below": "0-49",
+      "inline": "50-69",
+      "above": "70-100"
+    }
+  ],
+  "categories": [
+    {
+      "title": "V.Week",
+      "description": "Only a small percentage (up to 15%) of students meet curriculum standards.",
+      "range": "0-15"
+    },
+    {
+      "title": "Week",
+      "description": "Less than three-quarters (75%) of students attain levels that are at least in line with curriculum standards.",
+      "range": "16-74"
+    },
+    {
+      "title": "Requires Improvement",
+      "description": "If at least 75% of students are attaining at or above the curriculum standards stated in this column.",
+      "range": "N/A"
+    },
+    {
+      "title": "Good",
+      "description": "If at least 50% of the students are at or above the curriculum standards in this column.",
+      "range": "50-60"
+    },
+    {
+      "title": "V.Good",
+      "description": "If at least 61% of the students are at or above the standards stated in this column.",
+      "range": "61-74"
+    },
+    {
+      "title": "Outstanding",
+      "description": "If at least 75% of students are at or above the standards stated in this column.",
+      "range": "75+"
+    }
+  ]
+}
