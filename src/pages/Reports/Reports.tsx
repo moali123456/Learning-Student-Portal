@@ -4,15 +4,11 @@ import {
   fetchLevelSelectionOptions,
   fetchSubjectSelectionOptions,
 } from "../../api/services/Reports.services";
+import Input from "../../component/Reports/Input";
+import ReportDownload from "../../component/Reports/ReportDownload";
+import Selector from "../../component/Reports/Selector";
 import AttainmentReport from "./Attainment/AttainmentReport";
 import StudentMarks from "./StudentMarks/StudentMarks";
-import { FormData } from "../../models/types";
-import YearSelector from "../../component/Reports/YearSelector";
-import Selector from "../../component/Reports/Selector";
-import Input from "../../component/Reports/Input";
-import PreviewBtn from "../../component/Reports/PreviewBtn";
-import ReportDownload from "../../component/Reports/ReportDownload";
-import { set } from "date-fns";
 
 interface Option {
   value: string;

@@ -18,6 +18,7 @@ const dashboardRoutes: RouteObject = {
         { path: "students-files", element: <StudentFilePage /> },
         { path: "students-exams", element: <StudentsExams /> },
         { path: "students-exams", element: <StudentsExams /> },
+        { path: "Reports", element: <Reports /> },
       ],
     },
   ],
