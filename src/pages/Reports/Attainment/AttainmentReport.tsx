@@ -4,10 +4,10 @@ import AttainmentSkillsRanges from "./sections/AttainmentSkillsRanges";
 import CombinedGrades from "./sections/CombinedGrades";
 import LandingSection from "./sections/LandingSection";
 import ReportTable from "./sections/ReportTable";
-import { previewStudentAttaimentReport } from "../../../api/services/Reports.services";
-import { ExamResultType, FormData } from "../../../models/types";
 import ExamChartsTables from "./sections/ExamChartsTables";
 import Images from "../../../assets/images/Images";
+import { previewStudentAttaimentReport } from "../../../api/services/Reports.services";
+import { ExamResultType, FormData } from "../../../types/Reports";
 
 function AttainmentReport({ formData }: { formData: FormData }) {
   const [loading, setLoading] = useState(false);

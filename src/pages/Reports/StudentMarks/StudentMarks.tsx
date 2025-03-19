@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { downloadExcelFile } from "../../../api/services/Reports.services";
+import { useState } from "react";
 import { Button } from "../../../component/school-admin/ui/button";
 import {
   Table,
@@ -9,8 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../component/school-admin/ui/table";
-import { FormData } from "../../../models/types";
-import da from "./SelectionReport.json"
+import da from "./SelectionReport.json";
 interface Student {
   StudentID: string;
   StudentName: string;

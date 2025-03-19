@@ -10,8 +10,8 @@ import {
 } from "chart.js";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { generateChartData, generateDoughnutData } from "../../../../lib/utils";
-import { ExamResultType } from "../../../../models/types";
 import AssessmentTable from "./AssessmentTable";
+import { ExamResultType } from "../../../../types/Reports";
 
 ChartJS.register(
   CategoryScale,
