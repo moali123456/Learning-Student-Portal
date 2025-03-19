@@ -15,7 +15,7 @@ interface Option {
   label: string;
 }
 
-export default function SelectionForm() {
+export default function Reports() {
   const [submittedData, setSubmittedData] = useState<FormData | null>(null); // Prevents unnecessary re-renders
   const [formData, setFormData] = useState<FormData>({
     selectedYear: "",

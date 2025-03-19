@@ -4,6 +4,7 @@ import AdminLayout from "../layout/admin-layout/admin-layout";
 import SchoolAdminStudents from "../component/school-admin/students/students";
 import StudentsExams from "../component/school-admin/exams/students-exams";
 import { StudentFilePage } from "../pages/school-admin-view";
+import Reports from "../pages/Reports/Reports";
 
 const dashboardRoutes: RouteObject = {
   path: "/dashboard",
@@ -18,7 +19,7 @@ const dashboardRoutes: RouteObject = {
         { path: "students-files", element: <StudentFilePage /> },
         { path: "students-exams", element: <StudentsExams /> },
         { path: "students-exams", element: <StudentsExams /> },
-        { path: "Reports", element: <Reports /> },
+        { path: "reports", element: <Reports /> },
       ],
     },
   ],
