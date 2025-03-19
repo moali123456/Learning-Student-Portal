@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { AiOutlineLogout } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectAuth } from "../../store/authSlice";
 import "./styles.scss";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineLogout } from "react-icons/ai";
+import { AppDispatch } from "../../store/store";
 
 interface HeaderProps {
   leftChildren?: React.ReactNode;
@@ -10,18 +13,15 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ leftChildren, rightChildren }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const isAuthenticated = useSelector(selectAuth);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const handleToggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
-
-  // make loggedIn a varibl check the toket key in the local storage
-  const loggedIn = localStorage.getItem("token") ? true : false; // check if the user is logged in or not
-  const navigate = useNavigate();
-
-  const onLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login"); // Redirect user after logout
   };
 
   return (
@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ leftChildren, rightChildren }) => {
       <div className="flex items-center gap-6">{leftChildren}</div>
       <div className="flex items-center gap-4 relative">
         {rightChildren}
-        {loggedIn && (
+        {isAuthenticated && (
           <div className="relative mt-1">
             <button
               className="text-gray-800 font-medium focus:outline-none"
@@ -43,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ leftChildren, rightChildren }) => {
                   className="w-full px-4 py-2 text-left hover:bg-gray-100"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    onLogout();
+                    handleLogout();
                   }}
                 >
                   Logout

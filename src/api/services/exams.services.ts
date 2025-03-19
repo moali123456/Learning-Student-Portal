@@ -165,11 +165,11 @@ interface BasePayload {
   QuestionId: string;
 }
 
-export interface Type1And6Payload extends BasePayload {
+export interface Type1Payload extends BasePayload {
   AnswerId: string;
 }
 
-export interface Type2Payload extends Type1And6Payload {
+export interface Type2And6Payload extends Type1Payload {
   FreeWritingAnswer: string;
   AnswerFile: string;
 }
@@ -179,7 +179,7 @@ export interface Type4And5Payload extends BasePayload {
 }
 
 export const submitQuestionAnswer = async (
-  payload: Type1And6Payload | Type2Payload | Type4And5Payload
+  payload: Type1Payload | Type2And6Payload | Type4And5Payload
 ) => {
   try {
     // const response = await axios.post(

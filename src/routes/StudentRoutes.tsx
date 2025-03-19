@@ -3,6 +3,7 @@ import StudentLayout from "../layout/sudent-layout/student-layout";
 import Assessments from "../pages/assessments";
 import AssessmentsDetails from "../pages/assessments-details";
 import Exams from "../pages/exams";
+5
 import Questions from "../pages/questions";
 import PrivateRoute from "./PrivateRoutes";
 

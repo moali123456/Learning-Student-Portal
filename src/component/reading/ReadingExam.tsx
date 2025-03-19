@@ -3,8 +3,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Answer,
-  Type1And6Payload,
-  Type2Payload,
+  Type1Payload,
+  Type2And6Payload,
   Type4And5Payload,
 } from "../../api/services/exams.services";
 import { useGetSkillExamTopicsWithQuestionsQuery } from "../../api/studentApi";
@@ -114,15 +114,15 @@ function ExamHeader() {
             <p className="title">Reading</p>
             <ul className="points">
               <li>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
+                Lorem Ipsumis simply dummy text of the printing and typesetting
                 industry.
               </li>
               <li>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
+                Lorem Ipsumis simply dummy text of the printing and typesetting
                 industry.
               </li>
               <li>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
+                Lorem Ipsumis simply dummy text of the printing and typesetting
                 industry.
               </li>
             </ul>
@@ -157,11 +157,10 @@ function transformAnswer(
   input: QuestionAnswer,
   skill: number,
   examId: string
-): Type1And6Payload | Type2Payload | Type4And5Payload {
+): Type2And6Payload | Type1Payload | Type4And5Payload {
   switch (input.QuestionType) {
     case 1:
     case 3:
-    case 6:
       return {
         Skill: skill,
         ExamId: examId,
@@ -170,6 +169,7 @@ function transformAnswer(
       };
 
     case 2:
+    case 6:
       return {
         Skill: skill,
         ExamId: examId,

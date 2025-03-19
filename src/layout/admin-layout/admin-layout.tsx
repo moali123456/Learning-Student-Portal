@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
+import { ArrowLeft, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
+import Sidebar from "../../component/school-admin/shared/sidebar";
+import { Avatar, AvatarFallback } from "../../component/school-admin/ui/avatar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,7 +12,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../../component/school-admin/ui/breadcrumb";
-import { Separator } from "../../component/school-admin/ui/separator";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,30 +20,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../component/school-admin/ui/dropdown-menu";
-import { LogOut } from "lucide-react";
-import { ArrowLeft } from "lucide-react";
-import Sidebar from "../../component/school-admin/shared/sidebar";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../component/school-admin/ui/avatar";
+import { Separator } from "../../component/school-admin/ui/separator";
+import { logout, selectUserName } from "../../store/authSlice";
+import { AppDispatch } from "../../store/store";
+import { AvatarImage } from "@radix-ui/react-avatar";
+import { AvatarIcon } from "@radix-ui/react-icons";
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("addAdmin"); // Track active tab
-  const [profile, setProfile] = useState<{
-    Phone: string;
-    Email: string;
-    UserName: string;
-    Image: string | null;
-  }>({
-    Phone: "",
-    Email: "",
-    UserName: "",
-    Image: null,
-  });
-  const route = useNavigate();
 
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
@@ -54,14 +42,17 @@ const AdminLayout = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const userName = useSelector(selectUserName);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    route("/");
-    localStorage.removeItem("token");
+    dispatch(logout());
+    navigate("/login"); // Redirect user after logout
   };
 
   return (
     <>
-      <p>admiiiiiiiiiiiiiiiiiin</p>
       <header
         className={`flex h-16 shrink-0 items-center gap-2 border-b px-4 justify-between transition-all duration-300 ${
           isSidebarOpen ? "ml-64" : "ml-0"
@@ -97,15 +88,14 @@ const AdminLayout = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Avatar className="cursor-pointer">
-              <AvatarImage src={`/${profile.Image}`} alt="User" />
-              <AvatarFallback>U</AvatarFallback>
+            <Avatar className="cursor-pointer ">
+              <AvatarIcon className="size-full" />
             </Avatar>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" sideOffset={10}>
-            <DropdownMenuItem onClick={() => route("/dashboard/profile")}>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            </DropdownMenuItem>
+          <DropdownMenuContent align="end" sideOffset={10} className="bg-white">
+            {/* <DropdownMenuItem onClick={() => route("/dashboard/profile")}> */}
+            <DropdownMenuLabel>{userName}</DropdownMenuLabel>
+            {/* </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
